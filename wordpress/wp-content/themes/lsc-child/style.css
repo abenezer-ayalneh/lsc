@@ -1,0 +1,196 @@
+/*
+Theme Name:   LSC Child
+Theme URI:    https://www.lsportsc.org
+Description:  Child theme of Kadence for the Lewisham Sports Consortium website. Visual design is a pixel-clone of marys.org.uk (League Spartan headings, Quicksand body, vibrant tile palette). See docs/adr/0001.
+Author:       Lewisham Sports Consortium
+Template:     kadence
+Version:      0.3.3
+Text Domain:  lsc-child
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap');
+
+/* ---------------------------------------------------------------------------
+   Palette extracted from marys.org.uk (Elementor global colours):
+   orange accent, plus a vibrant tile palette (blue/green/teal/yellow/magenta/navy).
+   Most styling is driven by theme.json; this file holds the extras blocks
+   can't express on their own.
+--------------------------------------------------------------------------- */
+:root {
+	--brand-orange:  #fb6304;
+	--brand-orange-d:#e2560a;
+	--brand-blue:    #149ED9;
+	--brand-green:   #00844A;
+	--brand-teal:    #85C3BE;
+	--brand-yellow:  #FFD527;
+	--brand-magenta: #A30037;
+	--brand-navy:    #014A7F;
+	--ink:           #232323;
+	--smoke:         #f7f7f7;
+}
+
+/* Kadence (a classic theme) suppresses WordPress's auto-generated colour
+   utility classes, so the theme.json palette only gives us CSS variables.
+   Define the utility classes ourselves. !important wins over Kadence's CSS. */
+.has-brand-orange-background-color  { background-color: var(--brand-orange)  !important; }
+.has-brand-blue-background-color    { background-color: var(--brand-blue)    !important; }
+.has-brand-green-background-color   { background-color: var(--brand-green)   !important; }
+.has-brand-teal-background-color    { background-color: var(--brand-teal)    !important; }
+.has-brand-yellow-background-color  { background-color: var(--brand-yellow)  !important; }
+.has-brand-magenta-background-color { background-color: var(--brand-magenta) !important; }
+.has-brand-navy-background-color    { background-color: var(--brand-navy)    !important; }
+.has-ink-background-color           { background-color: var(--ink)           !important; }
+.has-smoke-background-color         { background-color: var(--smoke)         !important; }
+.has-white-background-color         { background-color: #fff                 !important; }
+.has-brand-orange-color  { color: var(--brand-orange)  !important; }
+.has-brand-blue-color    { color: var(--brand-blue)    !important; }
+.has-brand-green-color   { color: var(--brand-green)   !important; }
+.has-brand-magenta-color { color: var(--brand-magenta) !important; }
+.has-brand-navy-color    { color: var(--brand-navy)    !important; }
+.has-ink-color           { color: var(--ink)           !important; }
+.has-white-color         { color: #fff                 !important; }
+
+/* Typography: League Spartan display headings, Quicksand body (Mary's). */
+body, .entry-content, .content-container { font-family: 'Quicksand', system-ui, sans-serif; }
+h1, h2, h3, h4, .wp-block-heading,
+.site-title, .menu > li > a {
+	font-family: 'League Spartan', system-ui, sans-serif;
+}
+h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
+
+/* Pill buttons — Mary's rounded, bold, uppercase CTA style. */
+.wp-block-button__link {
+	border-radius: 999px !important;
+	font-family: 'League Spartan', sans-serif;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .5px;
+	padding: .85em 2em !important;
+}
+.wp-block-button__link.has-brand-orange-background-color:hover { background-color: var(--brand-orange-d) !important; }
+
+/* Header accent + logo sizing */
+.site-header-row-container { border-bottom: 4px solid var(--brand-orange); }
+.site-branding .site-title-wrap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.site-header .custom-logo-link img,
+.site-branding .custom-logo { max-height: 60px; width: auto; }
+
+/* Every page opens with its own cover header band, so hide Kadence's
+   auto-generated page-title hero across all pages to avoid a duplicate title. */
+.page .entry-hero,
+.page .page-hero-section,
+.home .entry-hero,
+.home .page-hero-section { display: none; }
+
+/* Unbox Kadence's page content: it wraps page content in a narrow, white,
+   boxed container (.content-container width limit + .content-bg background/
+   shadow + padding) which shows as a white strip behind our full-width bands.
+   Make the wrapper edge-to-edge and transparent so sections control their own
+   width and background. Constrained blocks still centre via theme.json. */
+.page .content-container.site-container { max-width: 100%; padding-left: 0; padding-right: 0; }
+.page .entry.content-bg { background: transparent !important; box-shadow: none !important; }
+.page .entry-content-wrap { padding: 0 !important; }
+.page .entry-content.single-content { margin-top: 0; margin-bottom: 0; }
+
+/* Hero overlay legibility */
+.lsc-hero { position: relative; }
+.lsc-hero h1, .lsc-hero p { text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+
+/* -------- Programme tiles (Mary's colourful category grid) -------- */
+.lsc-tile {
+	border-radius: 18px;
+	color: #fff;
+	height: 100%;
+	transition: transform .15s ease, box-shadow .15s ease;
+	box-shadow: 0 6px 20px rgba(0,0,0,.10);
+}
+.lsc-tile:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+.lsc-tile h3, .lsc-tile p, .lsc-tile a { color: #fff !important; }
+.lsc-tile a { font-weight: 700; text-decoration: underline; }
+
+/* Plain content cards (news/info) */
+.lsc-card {
+	border-radius: 18px;
+	background: #fff;
+	box-shadow: 0 4px 18px rgba(0,0,0,.08);
+	height: 100%;
+	transition: transform .15s ease, box-shadow .15s ease;
+}
+.lsc-card:hover { transform: translateY(-4px); box-shadow: 0 10px 26px rgba(0,0,0,.14); }
+
+/* -------- "Our Programme" alternating colour strands -------- */
+.lsc-strand-media {
+	background: rgba(255,255,255,.14);
+	border-radius: 18px;
+	border: 2px dashed rgba(255,255,255,.45);
+}
+.lsc-strand-list { list-style: none; padding: 0; margin: .5rem 0 0; }
+.lsc-strand-list li {
+	color: #fff; padding: .35rem 0 .35rem 1.6rem; position: relative;
+}
+.lsc-strand-list li::before {
+	content: "›"; position: absolute; left: 0; font-weight: 800;
+	font-family: 'League Spartan', sans-serif;
+}
+
+/* -------- Get in Touch: contact card + map card -------- */
+.lsc-contact-card {
+	border-radius: 18px;
+	box-shadow: 0 10px 30px rgba(1,74,127,.25);
+	height: 100%;
+}
+.lsc-contact-card a { color: #fff; }
+.lsc-contact-card a:hover { color: var(--brand-yellow); }
+.lsc-map-card {
+	border-radius: 18px;
+	overflow: hidden;
+	box-shadow: 0 10px 30px rgba(0,0,0,.12);
+	height: 100%;
+	min-height: 420px;
+}
+.lsc-map-card iframe { height: 100%; }
+
+/* News/Latest cards: rounded image cap clips to the card */
+.lsc-card { overflow: hidden; }
+.lsc-card-media { border-radius: 0 !important; }
+
+/* -------- Mary's-style multi-column footer (rendered via wp_footer) -------- */
+/* Hide Kadence's own builder footer (and its "Kadence WP" credit). */
+.site-footer, footer.site-footer { display: none !important; }
+
+.lsc-footer { background: var(--ink); color: #fff; }
+.lsc-footer-inner {
+	max-width: 1180px; margin: 0 auto; padding: 3.5rem 1.5rem 2.5rem;
+	display: grid; grid-template-columns: 1.5fr 1fr 1.4fr 1fr; gap: 2rem;
+}
+.lsc-footer-col h4 {
+	font-family: 'League Spartan', sans-serif; text-transform: uppercase;
+	letter-spacing: .5px; color: var(--brand-yellow); margin: 0 0 1rem;
+}
+.lsc-footer-col ul { list-style: none; margin: 0; padding: 0; line-height: 1.9; }
+.lsc-footer-col a { color: #fff; text-decoration: none; }
+.lsc-footer-col a:hover { color: var(--brand-orange); }
+.lsc-footer-brand img { max-height: 64px; width: auto; margin-bottom: 1rem; filter: brightness(0) invert(1); }
+.lsc-footer-brand p { color: #cfcfcf; }
+.lsc-footer-bar {
+	border-top: 1px solid rgba(255,255,255,.15);
+	padding: 1.25rem 1.5rem; max-width: 1180px; margin: 0 auto;
+	display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+	font-size: .9rem; color: #cfcfcf;
+}
+.lsc-footer-bar a { color: #fff; text-decoration: none; font-family: 'League Spartan', sans-serif; text-transform: uppercase; letter-spacing: .5px; }
+.lsc-footer-bar a:hover { color: var(--brand-yellow); }
+@media (max-width: 880px) {
+	.lsc-footer-inner { grid-template-columns: 1fr 1fr; }
+	.lsc-footer-bar { flex-direction: column; text-align: center; }
+}
+@media (max-width: 520px) {
+	.lsc-footer-inner { grid-template-columns: 1fr; }
+}
+
+/* Pricing table: rounded, branded header, zebra rows */
+.lsc-pricing table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+.lsc-pricing thead th { background: var(--brand-navy); color: #fff; text-align: left; font-family: 'League Spartan', sans-serif; text-transform: uppercase; }
+.lsc-pricing th, .lsc-pricing td { padding: .8rem 1rem; border-bottom: 1px solid #eee; }
+.lsc-pricing tbody tr:nth-child(odd) { background: var(--smoke); }
+.lsc-pricing td:last-child { font-weight: 700; white-space: nowrap; color: var(--brand-orange); }

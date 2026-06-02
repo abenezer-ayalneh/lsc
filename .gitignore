@@ -1,0 +1,24 @@
+# WordPress core + uploads + third-party plugins/themes are pulled at runtime,
+# not versioned. We track only what we author (see README).
+/wordpress/*
+!/wordpress/wp-content/
+/wordpress/wp-content/*
+!/wordpress/wp-content/themes/
+/wordpress/wp-content/themes/*
+!/wordpress/wp-content/themes/lsc-child/
+
+# ...and the reproducibility assets: the build script + page-content HTML that
+# recreate the site's pages/menus (run inside the wpcli container).
+!/wordpress/_build/
+
+# Mirrored sites (old lsportsc.org + marys.org.uk) — bulky third-party
+# reference material, re-creatable with wget. Not the deliverable.
+/reference/
+
+# Local env / secrets (commit .env.example instead).
+.env
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
