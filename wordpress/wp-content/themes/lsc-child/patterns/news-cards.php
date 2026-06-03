@@ -7,23 +7,24 @@
  * @package lsc-child
  */
 
+$img_base = get_stylesheet_directory_uri() . '/assets/images/';
+
 $cards = array(
-	array( 'brand-navy',    'Our public consultation', 'Aerial views, location plans and Phase 1 proposals for the future of Firhill Road Sports Ground.', '/media/' ),
-	array( 'brand-teal',    'Saturday football is back', 'Adult, junior and small-sided fixtures across the season — find out how your team can take part.', '/events/' ),
-	array( 'brand-yellow',  'Summer play scheme', 'Sport, games and activities for local young people over the school holidays.', '/events/' ),
+	array( 'brand-navy',    'Our public consultation', 'Aerial views, location plans and Phase 1 proposals for the future of Firhill Road Sports Ground.', '/media/', 'partnership-meeting.jpg', 'Consultation meeting about the future of the ground' ),
+	array( 'brand-teal',    'Saturday football is back', 'Adult, junior and small-sided fixtures across the season — find out how your team can take part.', '/events/', 'grounds-maintenance.jpg', 'The football pitches at Firhill Road Sports Ground' ),
+	array( 'brand-yellow',  'Summer play scheme', 'Sport, games and activities for local young people over the school holidays.', '/events/', 'heritage-display.jpg', 'Local people at a community event' ),
 );
 
 $cols = '';
 foreach ( $cards as $c ) {
-	list( $color, $title, $body, $href ) = $c;
+	list( $color, $title, $body, $href, $image, $alt ) = $c;
+	$img_url = esc_url( $img_base . $image );
 	$cols .= '
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:group {"className":"lsc-card","layout":{"type":"constrained"}} -->
-<div class="wp-block-group lsc-card"><!-- wp:group {"className":"lsc-card-media has-' . $color . '-background-color","backgroundColor":"' . $color . '","style":{"spacing":{"padding":{"top":"3rem","bottom":"3rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group lsc-card-media has-' . $color . '-background-color has-background" style="padding-top:3rem;padding-bottom:3rem"><!-- wp:paragraph {"align":"center","textColor":"white"} -->
-<p class="has-text-align-center has-white-color has-text-color">Photo</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group -->
+<div class="wp-block-group lsc-card"><!-- wp:cover {"url":"' . $img_url . '","dimRatio":0,"minHeight":220,"className":"lsc-card-media"} -->
+<div class="wp-block-cover lsc-card-media" style="min-height:220px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim"></span><img class="wp-block-cover__image-background" alt="' . esc_attr( $alt ) . '" src="' . $img_url . '" data-object-fit="cover"/><div class="wp-block-cover__inner-container"></div></div>
+<!-- /wp:cover -->
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"1.5rem","right":"1.5rem","bottom":"1.5rem","left":"1.5rem"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding:1.5rem"><!-- wp:heading {"level":3,"fontSize":"large"} -->
 <h3 class="wp-block-heading has-large-font-size">' . $title . '</h3>

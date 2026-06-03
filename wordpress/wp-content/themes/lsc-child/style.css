@@ -132,6 +132,7 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	border-radius: 18px;
 	border: 2px dashed rgba(255,255,255,.45);
 }
+.lsc-strand-photo { border-radius: 18px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.20); }
 .lsc-strand-list { list-style: none; padding: 0; margin: .5rem 0 0; }
 .lsc-strand-list li {
 	color: #fff; padding: .35rem 0 .35rem 1.6rem; position: relative;
