@@ -36,9 +36,20 @@ fi
 echo "[setup] Setting pretty permalinks..."
 wp rewrite structure '/%postname%/' --path=/var/www/html >/dev/null 2>&1 || true
 
-echo "[setup] Installing + activating Kadence theme..."
-wp theme install kadence --activate --path=/var/www/html || \
+echo "[setup] Installing Kadence parent theme..."
+wp theme install kadence --path=/var/www/html || \
   echo "[setup] WARN: could not install Kadence (check internet access). Continuing."
+
+# Activate the LSC child theme if it's present (it's bind-mounted from the repo);
+# otherwise fall back to the Kadence parent so the site still renders.
+if wp theme is-installed lsc-child --path=/var/www/html >/dev/null 2>&1; then
+  echo "[setup] Activating LSC child theme..."
+  wp theme activate lsc-child --path=/var/www/html || \
+    echo "[setup] WARN: could not activate lsc-child. Continuing."
+else
+  echo "[setup] lsc-child not found — activating Kadence parent instead."
+  wp theme activate kadence --path=/var/www/html || true
+fi
 
 # Tidy default content so the dev starts clean
 echo "[setup] Removing default plugins (Hello Dolly / Akismet)..."

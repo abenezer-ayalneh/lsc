@@ -1,15 +1,17 @@
 <?php
 /**
  * LSC home hero — Mary's-style full-width band: bold uppercase League Spartan
- * headline over a solid navy field (neutral placeholder, no photo yet) with
- * pill CTAs. See docs/adr/0001.
+ * headline over a team photo, tinted with a brand-navy overlay so the white
+ * headline and yellow eyebrow stay legible, with pill CTAs. See docs/adr/0001.
  *
  * @package lsc-child
  */
 
+$lsc_hero_image = get_stylesheet_directory_uri() . '/assets/images/hero-team.png';
+
 return '
-<!-- wp:cover {"overlayColor":"brand-navy","minHeight":520,"className":"lsc-hero","align":"full","style":{"spacing":{"padding":{"top":"5rem","bottom":"5rem"}}}} -->
-<div class="wp-block-cover alignfull lsc-hero" style="padding-top:5rem;padding-bottom:5rem;min-height:520px"><span aria-hidden="true" class="wp-block-cover__background has-brand-navy-background-color has-background-dim-100 has-background-dim"></span><div class="wp-block-cover__inner-container">
+<!-- wp:cover {"url":"' . esc_url( $lsc_hero_image ) . '","dimRatio":60,"overlayColor":"brand-navy","minHeight":780,"className":"lsc-hero","align":"full","style":{"spacing":{"padding":{"top":"7.5rem","bottom":"7.5rem"}}}} -->
+<div class="wp-block-cover alignfull lsc-hero" style="padding-top:7.5rem;padding-bottom:7.5rem;min-height:780px"><span aria-hidden="true" class="wp-block-cover__background has-brand-navy-background-color has-background-dim-60 has-background-dim"></span><img class="wp-block-cover__image-background" alt="" src="' . esc_url( $lsc_hero_image ) . '" data-object-fit="cover"/><div class="wp-block-cover__inner-container">
 <!-- wp:paragraph {"align":"center","textColor":"brand-yellow","fontSize":"medium","style":{"typography":{"textTransform":"uppercase","letterSpacing":"2px","fontWeight":"700"}}} -->
 <p class="has-text-align-center has-brand-yellow-color has-text-color has-medium-font-size" style="font-weight:700;letter-spacing:2px;text-transform:uppercase">Lewisham Sports Consortium</p>
 <!-- /wp:paragraph -->

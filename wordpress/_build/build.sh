@@ -13,6 +13,7 @@ export WP_CLI_CACHE_DIR=/tmp/.wp-cli/cache
 WP="wp --path=/var/www/html"
 BUILD=/var/www/html/_build
 THEME_IMG=/var/www/html/wp-content/themes/lsc-child/assets/images
+MEDIA=/var/www/html/_build/media
 
 echo "[build] Activating lsc-child theme..."
 $WP theme activate lsc-child
@@ -34,11 +35,40 @@ LOGO_ID=$(import_media "$THEME_IMG/lsc-logo.png" "LSC logo")
 echo "[build]   logo=$LOGO_ID"
 $WP theme mod set custom_logo "$LOGO_ID"
 
+# --- Site photos -------------------------------------------------------------
+# Real club photos live (committed) in _build/media/ and are re-imported here so
+# they survive a `docker compose down -v` reset. Each page template references
+# them via __NAME_ID__ / __NAME_URL__ tokens, substituted by render() below.
+media_url() { $WP eval "echo wp_get_attachment_url($1);"; }
+
+echo "[build] Importing site photos into the media library..."
+TROPHIES_ID=$(import_media "$MEDIA/youth-team-trophies.jpg" "Youth team with trophies"); TROPHIES_URL=$(media_url "$TROPHIES_ID")
+ACTIVITY_ID=$(import_media "$MEDIA/youth-activity.jpg" "Youth activity session");        ACTIVITY_URL=$(media_url "$ACTIVITY_ID")
+PARTNER_ID=$(import_media "$MEDIA/partnership-meeting.jpg" "Partnership meeting");        PARTNER_URL=$(media_url "$PARTNER_ID")
+HERITAGE_ID=$(import_media "$MEDIA/heritage-display.jpg" "Heritage display");             HERITAGE_URL=$(media_url "$HERITAGE_ID")
+COMMITTEE_ID=$(import_media "$MEDIA/committee-meeting.jpg" "Committee meeting");           COMMITTEE_URL=$(media_url "$COMMITTEE_ID")
+GROUNDS_ID=$(import_media "$MEDIA/grounds-maintenance.jpg" "Grounds maintenance");        GROUNDS_URL=$(media_url "$GROUNDS_ID")
+TRACTOR_ID=$(import_media "$MEDIA/grounds-tractor.jpg" "Grounds tractor");                TRACTOR_URL=$(media_url "$TRACTOR_ID")
+
+# Substitute the media tokens in a page template, emitting block markup with the
+# freshly-imported attachment IDs/URLs (which differ after every DB reset).
+render() {
+  sed \
+    -e "s|__TROPHIES_ID__|$TROPHIES_ID|g"   -e "s|__TROPHIES_URL__|$TROPHIES_URL|g" \
+    -e "s|__ACTIVITY_ID__|$ACTIVITY_ID|g"   -e "s|__ACTIVITY_URL__|$ACTIVITY_URL|g" \
+    -e "s|__PARTNER_ID__|$PARTNER_ID|g"     -e "s|__PARTNER_URL__|$PARTNER_URL|g" \
+    -e "s|__HERITAGE_ID__|$HERITAGE_ID|g"   -e "s|__HERITAGE_URL__|$HERITAGE_URL|g" \
+    -e "s|__COMMITTEE_ID__|$COMMITTEE_ID|g" -e "s|__COMMITTEE_URL__|$COMMITTEE_URL|g" \
+    -e "s|__GROUNDS_ID__|$GROUNDS_ID|g"     -e "s|__GROUNDS_URL__|$GROUNDS_URL|g" \
+    -e "s|__TRACTOR_ID__|$TRACTOR_ID|g"     -e "s|__TRACTOR_URL__|$TRACTOR_URL|g" \
+    "$1"
+}
+
 # --- Pages -------------------------------------------------------------------
 # Creates or updates a page by slug. $1=slug $2=title $3=content-file
 upsert_page() {
   slug="$1"; title="$2"; file="$3"
-  content=$(cat "$file")
+  content=$(render "$file")
   id=$($WP post list --post_type=page --name="$slug" --field=ID --posts_per_page=1 2>/dev/null | head -n1)
   if [ -n "$id" ]; then
     echo "$content" | $WP post update "$id" --post_title="$title" --post_status=publish - >/dev/null

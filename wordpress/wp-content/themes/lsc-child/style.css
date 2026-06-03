@@ -91,10 +91,18 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .page .entry.content-bg { background: transparent !important; box-shadow: none !important; }
 .page .entry-content-wrap { padding: 0 !important; }
 .page .entry-content.single-content { margin-top: 0; margin-bottom: 0; }
+/* Kadence wraps the article in #primary.content-area with 5rem top/bottom
+   margin, leaving a strip of page background above the first full-width band
+   (and below the last). Zero it so each page's cover band meets the header and
+   the footer flush. */
+.page .content-area { margin-top: 0; margin-bottom: 0; }
 
 /* Hero overlay legibility */
 .lsc-hero { position: relative; }
 .lsc-hero h1, .lsc-hero p { text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+/* Fill the viewport below the header (header = 80px min-height + 4px accent
+   border). !important overrides the cover block's inline min-height. */
+.home .lsc-hero { min-height: calc(100vh - 84px) !important; }
 
 /* -------- Programme tiles (Mary's colourful category grid) -------- */
 .lsc-tile {
