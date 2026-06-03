@@ -7,7 +7,7 @@
  * @package lsc-child
  */
 
-$lsc_hero_image = get_stylesheet_directory_uri() . '/assets/images/hero-team.png';
+$lsc_hero_image = get_stylesheet_directory_uri() . '/assets/images/hero-team.jpg';
 
 return '
 <!-- wp:cover {"url":"' . esc_url( $lsc_hero_image ) . '","dimRatio":60,"overlayColor":"brand-navy","minHeight":780,"className":"lsc-hero","align":"full","style":{"spacing":{"padding":{"top":"7.5rem","bottom":"7.5rem"}}}} -->
