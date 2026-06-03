@@ -35,9 +35,20 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DEBUG: "1"
       WORDPRESS_CONFIG_EXTRA: |
-        define('WP_HOME', getenv('WP_SITE_URL') ?: 'http://localhost:8080');
-        define('WP_SITEURL', getenv('WP_SITE_URL') ?: 'http://localhost:8080');
         define('WP_ENVIRONMENT_TYPE', 'local');
+        // Answer correctly behind an ngrok tunnel (which sets X-Forwarded-Host)
+        // while still working on plain localhost, so a client can review the
+        // local site over HTTPS without breaking dev. See README ngrok notes.
+        if ( ! empty( $$_SERVER['HTTP_X_FORWARDED_HOST'] ) ) {
+            $$lsc_host = preg_replace('/[^a-zA-Z0-9.\-:]/', '', explode(',', $$_SERVER['HTTP_X_FORWARDED_HOST'])[0]);
+            $$_SERVER['HTTP_HOST'] = $$lsc_host;
+            $$_SERVER['HTTPS'] = 'on';
+            define('WP_HOME',    'https://' . $$lsc_host);
+            define('WP_SITEURL', 'https://' . $$lsc_host);
+        } else {
+            define('WP_HOME',    getenv('WP_SITE_URL') ?: 'http://localhost:8080');
+            define('WP_SITEURL', getenv('WP_SITE_URL') ?: 'http://localhost:8080');
+        }
       WP_SITE_URL: ${WP_SITE_URL}
     volumes:
       - ./wordpress:/var/www/html
