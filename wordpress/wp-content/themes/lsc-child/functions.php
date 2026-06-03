@@ -79,12 +79,11 @@ function lsc_logo_url() {
  * See docs/adr/0001 (Mary's visual design) and docs/adr/0002 (Terms in footer).
  */
 add_action( 'wp_footer', function () {
-	$logo = lsc_logo_url();
 	?>
 	<footer class="lsc-footer" role="contentinfo">
 		<div class="lsc-footer-inner">
 			<div class="lsc-footer-col lsc-footer-brand">
-				<img src="<?php echo esc_url( $logo ); ?>" alt="Lewisham Sports Consortium" />
+				<p class="lsc-footer-wordmark"><span>Lewisham</span>Sports Consortium</p>
 				<p>Sport, recreation and opportunity for the Lewisham community.</p>
 			</div>
 			<div class="lsc-footer-col">

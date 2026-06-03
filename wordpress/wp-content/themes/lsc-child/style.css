@@ -179,8 +179,13 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-footer-col ul { list-style: none; margin: 0; padding: 0; line-height: 1.9; }
 .lsc-footer-col a { color: #fff; text-decoration: none; }
 .lsc-footer-col a:hover { color: var(--brand-orange); }
-.lsc-footer-brand img { max-height: 64px; width: auto; margin-bottom: 1rem; filter: brightness(0) invert(1); }
 .lsc-footer-brand p { color: #cfcfcf; }
+.lsc-footer-wordmark {
+	font-family: 'League Spartan', sans-serif; font-weight: 800;
+	text-transform: uppercase; letter-spacing: .5px; line-height: 1.02;
+	font-size: 1.6rem; color: #fff; margin: 0 0 1rem;
+}
+.lsc-footer-wordmark span { display: block; color: var(--brand-yellow); }
 .lsc-footer-bar {
 	border-top: 1px solid rgba(255,255,255,.15);
 	padding: 1.25rem 1.5rem; max-width: 1180px; margin: 0 auto;
