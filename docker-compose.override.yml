@@ -1,0 +1,7 @@
+# Local-dev overrides — loaded automatically by `docker compose up`.
+# Skipped in production where `-f` flags are used explicitly.
+
+services:
+  wordpress:
+    ports:
+      - "${WP_PORT}:80"
