@@ -65,6 +65,17 @@ add_action( 'init', function () {
 } );
 
 /**
+ * Custom favicon from the child theme — overrides the WP Site Icon setting.
+ */
+add_action( 'wp_head', function () {
+	$dir = get_stylesheet_directory_uri() . '/assets/images';
+	echo '<link rel="icon" type="image/x-icon" href="' . esc_url( $dir . '/favicon.ico' ) . '">' . "\n";
+	echo '<link rel="icon" type="image/png" sizes="32x32" href="' . esc_url( $dir . '/favicon-32x32.png' ) . '">' . "\n";
+	echo '<link rel="icon" type="image/png" sizes="16x16" href="' . esc_url( $dir . '/favicon-16x16.png' ) . '">' . "\n";
+	echo '<link rel="apple-touch-icon" sizes="180x180" href="' . esc_url( $dir . '/apple-touch-icon.png' ) . '">' . "\n";
+} );
+
+/**
  * Expose the theme's logo + brand colours as a quick helper for templates.
  */
 function lsc_logo_url() {

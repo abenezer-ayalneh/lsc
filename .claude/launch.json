@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wordpress",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "--profile", "dev", "up"],
+      "port": 8080,
+      "autoPort": false
+    }
+  ]
+}
