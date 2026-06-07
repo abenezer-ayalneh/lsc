@@ -10,8 +10,11 @@ installed automatically on first run.
 ## Start
 
 ```bash
-docker compose up -d
+docker compose --profile dev up -d
 ```
+
+The `dev` profile starts phpMyAdmin and MailHog alongside WordPress. For production
+on an Ubuntu VPS, see [Production deployment](#production-deployment) below.
 
 First run pulls images and auto-installs WordPress + Kadence (watch progress with
 `docker compose logs -f wpcli`). Give it ~1–2 minutes, then open the site.
@@ -30,7 +33,7 @@ All credentials and ports are defined in `.env` — change them there if needed.
 ## Everyday commands
 
 ```bash
-docker compose up -d        # start
+docker compose --profile dev up -d        # start (includes phpMyAdmin + MailHog)
 docker compose down         # stop (keeps data)
 docker compose logs -f wordpress   # tail logs
 
@@ -42,9 +45,9 @@ docker compose run --rm --entrypoint wp wpcli plugin list --path=/var/www/html
 ## Reset everything
 
 ```bash
-docker compose down -v   # also drops the database volume
+docker compose --profile dev down -v   # also drops the database volume
 rm -rf wordpress         # removes WordPress core/uploads
-docker compose up -d     # fresh install
+docker compose --profile dev up -d     # fresh install
 ```
 
 ## How it fits together
@@ -62,3 +65,9 @@ commit it; the rest of WP is reproducible from this compose file.
 
 > Production note: these credentials and the `WORDPRESS_DEBUG` flag are for local
 > dev only. LSC owns the real hosting/domain (see `PROJECT_PLAN.md` §7).
+
+## Production deployment
+
+Deploy to an Ubuntu VPS with Docker Compose and your existing Caddy reverse proxy using the
+step-by-step runbook: [`docs/runbooks/deploy-ubuntu-server.md`](docs/runbooks/deploy-ubuntu-server.md).
+Production uses `docker-compose.prod.yml` and `.env.production.example` — not the local `.env.example`.

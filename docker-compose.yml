@@ -82,6 +82,7 @@ services:
     networks: [lsc]
 
   phpmyadmin:
+    profiles: [dev]
     image: phpmyadmin:5
     container_name: lsc_phpmyadmin
     restart: unless-stopped
@@ -97,6 +98,7 @@ services:
     networks: [lsc]
 
   mailhog:
+    profiles: [dev]
     image: mailhog/mailhog:latest
     container_name: lsc_mailhog
     restart: unless-stopped

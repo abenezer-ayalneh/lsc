@@ -1,0 +1,27 @@
+# Caddy site block for LSC WordPress (Docker on 127.0.0.1:8080).
+# Caddy obtains and renews TLS certificates automatically.
+#
+# Option A — import into your main Caddyfile (recommended if Caddy is already set up):
+#   sudo cp config/caddy/lsc.caddyfile.example /etc/caddy/sites/lsc.caddyfile
+#   Add to /etc/caddy/Caddyfile:  import /etc/caddy/sites/*.caddyfile
+#
+# Option B — append this block directly to /etc/caddy/Caddyfile
+#
+# Then validate and reload:
+#   sudo caddy validate --config /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#
+# Replace lsportsc.org with your domain. Match WP_PORT in .env (default 8080).
+
+www.lsportsc.org, lsportsc.org {
+	request_body {
+		max_size 64MB
+	}
+
+	reverse_proxy 127.0.0.1:8080 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

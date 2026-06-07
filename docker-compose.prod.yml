@@ -1,0 +1,21 @@
+# Production overrides for Ubuntu VPS deployment.
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# See docs/runbooks/deploy-ubuntu-server.md
+
+services:
+  wordpress:
+    ports:
+      - "127.0.0.1:${WP_PORT}:80"
+    environment:
+      WORDPRESS_DEBUG: "0"
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'production');
+        if ( isset( $$_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
+            $$_SERVER['HTTPS'] = 'on';
+        }
+        define('WP_HOME',    getenv('WP_SITE_URL') ?: 'https://www.lsportsc.org');
+        define('WP_SITEURL', getenv('WP_SITE_URL') ?: 'https://www.lsportsc.org');
+    volumes:
+      - ./wordpress:/var/www/html
+      # Empty dir — do not mount config/mu-plugins/00-mailhog.php in production.
+      - ./config/mu-plugins-prod:/var/www/html/wp-content/mu-plugins
