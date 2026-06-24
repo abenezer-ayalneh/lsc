@@ -1,7 +1,7 @@
 ## Runbook: Deploy LSC WordPress on Ubuntu Server
 
 **Owner:** LSC project team / deploy operator | **Frequency:** As Needed (go-live + updates)
-**Last Updated:** 2026-06-07 | **Last Run:** —
+**Last Updated:** 2026-06-24 | **Last Run:** —
 
 ### Purpose
 
@@ -225,19 +225,46 @@ WordPress PHP `mail()` is unreliable on most VPS hosts. When LSC provides SMTP c
 
 ### Updating the site (routine deploy)
 
+Content lives in **two** places, and `git pull` only updates one of them:
+
+- **Theme code** (`lsc-child/` — `style.css`, `functions.php`, `assets/`) is bind-mounted, so it is **live the moment you pull** (a container restart at most). No rebuild needed.
+- **Page content, menus, and the Forminator booking form** live in the **WordPress database** (a Docker volume on the server). `git pull` never touches the DB — you must restore the committed snapshot to bring these across.
+
+**Always back up the production DB before importing** — `import-db.sh` overwrites the entire database (see Rollback):
+
 ```bash
 cd /opt/lsc-wordpress
+docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+  run --rm --entrypoint wp wpcli db export - --path=/var/www/html > "backup-$(date +%F).sql"
+```
+
+Pull the latest code, templates, and DB snapshot, then bring the stack up:
+
+```bash
 git pull
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-If page templates or `_build/` content changed, re-run the build:
+Restore the committed content snapshot (pages, menus, **and the Forminator booking form**). `import-db.sh` rewrites the `__LSC_SITE_URL__` token to your `WP_SITE_URL` automatically:
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
+docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+  run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh
 ```
 
-Theme-only CSS/PHP changes under `lsc-child/` are live immediately via the bind mount; no rebuild needed unless pages reference new assets.
+> **Use `import-db.sh`, not `build.sh`, for content that includes the booking form.** `build.sh` rebuilds pages from the HTML templates but does **not** recreate the Forminator form — that exists only in the DB snapshot (`_build/db/lsc-db.sql`). `build.sh` remains the right tool only for a greenfield first build with no snapshot to restore (Step 7).
+
+**Caveats:**
+
+- **`import-db.sh` is a one-way push (local → prod).** It replaces the whole production database, so any content edited directly in production wp-admin (and any form submissions stored there) is wiped and replaced by the snapshot. The backup above is your safety net. This matches the intended workflow: author locally → `export-db.sh` → commit → `import-db.sh` on prod.
+- **Media files are not in the snapshot.** `wp-content/uploads/` is gitignored; the DB references attachments by path/ID but the actual image files are not shipped in git. If new content references images that weren't already on the server from a prior build, copy them up from your local machine:
+
+  ```bash
+  # from your local repo root
+  rsync -avz wordpress/wp-content/uploads/ user@SERVER:/opt/lsc-wordpress/wordpress/wp-content/uploads/
+  ```
+
+Theme-only CSS/PHP changes under `lsc-child/` are live immediately via the bind mount; no rebuild or import needed unless pages reference new assets or DB content.
 
 ---
 

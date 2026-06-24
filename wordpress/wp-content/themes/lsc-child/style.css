@@ -239,6 +239,10 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-conditions-of-hire__body ol { padding-left: 1.4rem; }
 .lsc-conditions-of-hire__body li + li { margin-top: .5rem; }
 
+/* Hide Forminator's admin-only "Edit form" link rendered below the form
+   (only logged-in editors ever see it; keep it out of the page entirely). */
+.forminator-edit-module { display: none !important; }
+
 .lsc-booking-form .wpcf7-form p { margin: 0 0 1.1rem; }
 .lsc-booking-form label { display: block; font-weight: 500; }
 .lsc-booking-form input[type="text"],
