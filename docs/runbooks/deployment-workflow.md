@@ -57,11 +57,12 @@ docker compose run --rm --entrypoint wp wpcli db export - --path=/var/www/html >
 
 This overwrites `_build/db/lsc-db.sql` with the latest state. **Commit this file.**
 
-Also, if you added new images/media:
+Also, if you added new images/media via the Media Library, commit the upload
+files so they deploy with the next push:
 
 ```bash
-# They're already in wordpress/wp-content/uploads/ (bind mount)
-# Nothing to do — they'll sync when staging deploys
+git add wordpress/wp-content/uploads
+# (plugin runtime dirs — forminator/, wpcf7_uploads/ — are gitignored automatically)
 ```
 
 ### Committing and pushing
@@ -224,69 +225,66 @@ git merge main
 git push origin release/prod      # Deploys to production
 ```
 
-## CI/CD Setup (Phase 2 - Planning)
+## CI/CD Setup
 
-The workflows below are **pending implementation** via GitHub Actions. Once set up, they will automate all deploys.
+The automation is **implemented** in three files:
 
-### Staging deploy workflow
+- [`.github/workflows/deploy-staging.yml`](../../.github/workflows/deploy-staging.yml) — runs on every push to `main`
+- [`.github/workflows/deploy-production.yml`](../../.github/workflows/deploy-production.yml) — runs on every push to `release/prod`
+- [`wordpress/_build/deploy.sh`](../../wordpress/_build/deploy.sh) — the actual deploy logic, run **on the server** over SSH
 
-Triggers: every push to `main`
+Each workflow just SSHes into the right server and runs `deploy.sh`, which:
+backs up the current DB → `git fetch` + `git reset --hard` to the tracked branch →
+`docker compose up -d` → waits for WordPress → runs `import-db.sh`. Media rides
+along in git (`wp-content/uploads/` is tracked), so no separate media sync is needed.
 
-```yaml
-# .github/workflows/deploy-staging.yml
-on:
-  push:
-    branches: [main]
+Until secrets are configured, each workflow **self-skips with a warning** (green run, not red) so an unconfigured push doesn't fail noisily.
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to staging
-        env:
-          DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
-          STAGING_HOST: lsc.abenezer-ayalneh.dev
-        run: |
-          mkdir -p ~/.ssh
-          echo "$DEPLOY_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H $STAGING_HOST >> ~/.ssh/known_hosts
-          ssh user@$STAGING_HOST 'cd /opt/lsc-wordpress && git pull && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d && docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh'
+### One-time setup (per server)
+
+The workflows read secrets from two **GitHub Environments**: `staging` and `production`. Create both under **Settings → Environments**, then add these secrets to each:
+
+| Secret            | Required | Example                       | Notes                                          |
+| ----------------- | -------- | ----------------------------- | ---------------------------------------------- |
+| `SSH_HOST`        | yes      | `lsc.abenezer-ayalneh.dev`    | Server hostname or IP                          |
+| `SSH_USER`        | yes      | `deploy`                      | SSH user that owns `/opt/lsc-wordpress`        |
+| `SSH_PRIVATE_KEY` | yes      | `-----BEGIN OPENSSH...`       | Private half of the deploy keypair             |
+| `SSH_PORT`        | no       | `22`                          | Defaults to `22` if unset                      |
+| `REPO_DIR`        | no       | `/opt/lsc-wordpress`          | Defaults to `/opt/lsc-wordpress` if unset      |
+
+**Generate and install the deploy key** (run locally, once per server):
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/lsc_deploy -N ""
+# Add the PUBLIC key to the server's authorized_keys for the deploy user:
+ssh-copy-id -i ~/.ssh/lsc_deploy.pub deploy@lsc.abenezer-ayalneh.dev
+# Paste the PRIVATE key (~/.ssh/lsc_deploy) into the SSH_PRIVATE_KEY secret.
+cat ~/.ssh/lsc_deploy
 ```
 
-### Production deploy workflow
+The server must already have the repo cloned at `REPO_DIR`, its branch tracking
+the right upstream (`main` on staging, `release/prod` on production), `.env`
+configured, and Docker installed — see [deploy-ubuntu-server.md](deploy-ubuntu-server.md).
 
-Triggers: every push to `release/prod`
+### Setup checklist
 
-```yaml
-# .github/workflows/deploy-production.yml
-on:
-  push:
-    branches: [release/prod]
+- [ ] Generate an SSH deploy keypair per server (`ssh-keygen` above)
+- [ ] Install each **public** key in the server's `~/.ssh/authorized_keys`
+- [ ] Create `staging` and `production` GitHub Environments
+- [ ] Add `SSH_HOST` / `SSH_USER` / `SSH_PRIVATE_KEY` (+ optional `SSH_PORT`, `REPO_DIR`) to each environment
+- [ ] On the staging server, ensure the clone is on `main` (`git branch --show-current`)
+- [ ] On the production server (when ready), ensure the clone is on `release/prod`
+- [ ] Push a trivial change to `main` and confirm the staging deploy goes green
+- [ ] (Optional) Add a required reviewer to the `production` environment for a manual approval gate
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to production
-        env:
-          DEPLOY_KEY: ${{ secrets.PRODUCTION_DEPLOY_KEY }}
-          PRODUCTION_HOST: your-production-server.com
-        run: |
-          mkdir -p ~/.ssh
-          echo "$DEPLOY_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H $PRODUCTION_HOST >> ~/.ssh/known_hosts
-          ssh user@$PRODUCTION_HOST 'cd /opt/lsc-wordpress && git pull && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d && docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh'
+### Manual deploy
+
+You can trigger either workflow by hand from the **Actions** tab (`workflow_dispatch`),
+or run the script directly on the server:
+
+```bash
+ssh deploy@SERVER 'LSC_REPO_DIR=/opt/lsc-wordpress sh /opt/lsc-wordpress/wordpress/_build/deploy.sh'
 ```
-
-**Setup tasks:**
-- [ ] Generate SSH deploy keys for staging/production
-- [ ] Add deploy keys as GitHub Secrets (`STAGING_DEPLOY_KEY`, `PRODUCTION_DEPLOY_KEY`)
-- [ ] Create `.github/workflows/deploy-staging.yml` and `deploy-production.yml`
-- [ ] Test by pushing to main and watching GitHub Actions logs
 
 ---
 
@@ -298,7 +296,8 @@ jobs:
 | GitHub Actions workflow failing | Deploy key not installed or SSH permissions wrong | Check Actions logs; verify deploy key is in GitHub Secrets and authorized on server |
 | Staging old content but code new | Import-db.sh failed silently | SSH to staging, manually run: `docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh` |
 | Production won't start after deploy | Docker Compose config mismatch | SSH to production, run: `docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f` to see errors |
-| Media files missing on staging/prod | Not all uploads synced | Check that `wordpress/wp-content/uploads/` is bind-mounted in docker-compose.prod.yml; files should sync automatically |
+| Media files missing on staging/prod | New image not committed | `wp-content/uploads/` is tracked in git (except plugin runtime dirs). Commit new images: `git add wordpress/wp-content/uploads && git commit`. They deploy on the next push. |
+| Broken image after deploy | Image edited in server wp-admin, not locally | Author media locally only; server uploads are overwritten by `git reset --hard`. Re-add the image locally, export the DB, commit, push. |
 
 ---
 

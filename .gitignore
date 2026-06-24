@@ -7,6 +7,15 @@
 /wordpress/wp-content/themes/*
 !/wordpress/wp-content/themes/lsc-child/
 
+# Media library is committed so images deploy via git alongside the DB snapshot
+# (see docs/adr/0004). The site is small (~8 photos); tracking uploads keeps the
+# files in sync with the attachment paths the DB snapshot expects, so a plain
+# git pull restores working images. Plugin *runtime* upload dirs stay ignored:
+# they are regenerated on demand and may hold user form-submission files.
+!/wordpress/wp-content/uploads/
+/wordpress/wp-content/uploads/forminator/
+/wordpress/wp-content/uploads/wpcf7_uploads/
+
 # ...and the reproducibility assets: the build script + page-content HTML that
 # recreate the site's pages/menus (run inside the wpcli container).
 !/wordpress/_build/

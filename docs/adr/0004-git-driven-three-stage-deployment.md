@@ -48,12 +48,23 @@ Without a defined workflow, deployment is ad-hoc: manual SSH, copy-paste of SQL 
 - **Slower hotfixes:** Critical production bugs require fix → commit → push → 1–2 min staging test → merge to release/prod → 1–2 min prod deploy. Not immediate. Acceptable trade-off for stability.
 - **All-or-nothing promotions:** Cannot cherry-pick individual commits from main to production. Either promote all of main or none. If needed later, we can add a release branch workflow; for now, we expect main is always deployable.
 
+## Media handling
+
+`wp-content/uploads/` is **committed to git** (plugin runtime dirs excluded) so
+images deploy alongside the DB snapshot with no separate sync step. The site is
+small (~8 photos, ~7 MB), so the repo-size cost is negligible and it removes the
+fragile "rsync uploads" step the prior runbook required. The committed upload
+paths stay in lockstep with the attachment records in `_build/db/lsc-db.sql`.
+
 ## Implementation tasks
 
-- [ ] Set up GitHub Actions workflow to auto-deploy `main` to staging
-- [ ] Set up GitHub Actions workflow to auto-deploy `release/prod` to production
-- [ ] Add deploy SSH keys and environment secrets to GitHub
-- [ ] Document the workflow for the team (runbook: `docs/runbooks/deployment-workflow.md`)
+- [x] Set up GitHub Actions workflow to auto-deploy `main` to staging (`.github/workflows/deploy-staging.yml`)
+- [x] Set up GitHub Actions workflow to auto-deploy `release/prod` to production (`.github/workflows/deploy-production.yml`)
+- [x] Extract deploy logic into a server-side script (`wordpress/_build/deploy.sh`)
+- [x] Commit `wp-content/uploads/` so media auto-deploys via git
+- [x] Document the workflow (`docs/runbooks/deployment-workflow.md`)
+- [ ] Generate deploy SSH keys and add `staging`/`production` environment secrets in GitHub
+- [ ] Create the `release/prod` branch and point the production server's clone at it
 - [ ] Add main branch protection rules (require PR review, passing tests) once team grows
 
 ## Related decisions

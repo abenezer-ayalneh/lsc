@@ -1,0 +1,53 @@
+name: Deploy to staging
+
+# Every push to main auto-deploys to the staging server
+# (lsc.abenezer-ayalneh.dev). See docs/adr/0004 and the deployment runbook.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {} # allow manual re-deploy from the Actions tab
+
+# Never run two staging deploys at once; let an in-flight one finish.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Check deploy is configured
+        id: check
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          if [ -z "$SSH_HOST" ]; then
+            echo "::warning::Staging deploy secrets not set — skipping. Add SSH_HOST/SSH_USER/SSH_PRIVATE_KEY (and optional SSH_PORT) to the 'staging' environment. See docs/runbooks/deployment-workflow.md."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure SSH
+        if: steps.check.outputs.configured == 'true'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Run deploy on staging
+        if: steps.check.outputs.configured == 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          REPO_DIR: ${{ secrets.REPO_DIR || '/opt/lsc-wordpress' }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "LSC_REPO_DIR='$REPO_DIR' sh '$REPO_DIR/wordpress/_build/deploy.sh'"
