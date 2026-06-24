@@ -27,3 +27,15 @@ Glossary of the language we use on this project. Terms only — no implementatio
 **Hirer** — The person, club, or organisation booking Firhill Road Sports Ground for an event. Single-source term — do not use "renter", "customer", "client", or "booker".
 
 **Image slot** — A position in a Mary's template that holds a photo. In the LSC build these are filled with **neutral placeholder blocks**, not Mary's photography, until real LSC imagery is supplied.
+
+## Deployment
+
+**Main branch** — The canonical source branch for **staging**. Every commit to `main` triggers an automatic deploy to the staging server (`lsc.abenezer-ayalneh.dev`). Main is the single source of truth for testing; it is not protected (direct commits allowed, but prefer PRs once you need code review).
+
+**Release/prod branch** — The canonical source branch for **production**. Code is promoted to production by merging `main` into `release/prod`, which then auto-deploys. Kept separate to allow staging to move fast while production is more conservative. All hotfixes are merged to `main` first, then promoted to `release/prod` via standard merge.
+
+**Staging** — The persistent staging server at `lsc.abenezer-ayalneh.dev` (Ubuntu VPS, Docker Compose, same stack as production). Used for client demos, testing, and validation. Auto-updates on every `main` push (code + database snapshot + media files). Staging database can be overwritten by auto-imports; the local machine is the source of truth for content.
+
+**Production** — The live server (TBD — awaiting client hosting confirmation). Once online, promoted to via merges from `main` to `release/prod`. Treated as read-only in terms of content — all edits are made locally, exported, and imported to prod. Database backups are mandatory before any import.
+
+**Local dev** — Developer's machine running `docker compose --profile dev up`. Includes WordPress, MariaDB, phpMyAdmin, MailHog. Only place where content edits happen directly in WP Admin; changes are then exported via `export-db.sh` and committed.
