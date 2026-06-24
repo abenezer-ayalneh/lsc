@@ -55,6 +55,9 @@ fi
 echo "[setup] Removing default plugins (Hello Dolly / Akismet)..."
 wp plugin delete hello akismet --path=/var/www/html >/dev/null 2>&1 || true
 
+# The Booking Hire Agreement form is a Forminator form (see docs/adr/0003),
+# restored from the DB snapshot via import-db.sh rather than installed here.
+
 echo ""
 echo "[setup] ✅ Done."
 echo "[setup]   Site:  ${WP_SITE_URL}"

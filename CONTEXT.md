@@ -18,6 +18,12 @@ Glossary of the language we use on this project. Terms only — no implementatio
 
 **Pricing table** — The on-page hire-rates table derived from `LSC_Info_Prices.pdf`. No longer a top-level page; it lives **inside Get Involved**.
 
-**Terms of Use** — Ground rules / conditions of hire. No longer a top-level page; reachable from the **footer**.
+**Terms of Use** — General **ground rules** for everyone using Firhill Road Sports Ground (no dogs, no smoking, changing-room etiquette, etc.). Reachable from the **footer**. Distinct from **Conditions of Hire** below.
+
+**Conditions of Hire** — The 22-clause legal terms a Hirer agrees to when booking the grounds (deposits, cancellations, indemnity, public liability). Sourced from PDF pages 3–5 of `LSC-000 Booking Hire Agreement Form.pdf`. Surfaced inline on the **Booking Hire Agreement** page, not as a standalone nav page. *Not* the same as Terms of Use.
+
+**Booking Hire Agreement** — The web equivalent of the LSC-000 PDF: a fillable form where a prospective Hirer submits booking details (dates, times, party details, equipment, insurer) and accepts the Conditions of Hire. Lives at `/get-involved/book-the-grounds/`. See `docs/adr/0003`.
+
+**Hirer** — The person, club, or organisation booking Firhill Road Sports Ground for an event. Single-source term — do not use "renter", "customer", "client", or "booker".
 
 **Image slot** — A position in a Mary's template that holds a photo. In the LSC build these are filled with **neutral placeholder blocks**, not Mary's photography, until real LSC imagery is supplied.

@@ -50,6 +50,11 @@ COMMITTEE_ID=$(import_media "$MEDIA/committee-meeting.jpg" "Committee meeting");
 GROUNDS_ID=$(import_media "$MEDIA/grounds-maintenance.jpg" "Grounds maintenance");        GROUNDS_URL=$(media_url "$GROUNDS_ID")
 TRACTOR_ID=$(import_media "$MEDIA/grounds-tractor.jpg" "Grounds tractor");                TRACTOR_URL=$(media_url "$TRACTOR_ID")
 
+# --- Booking Hire Agreement form ---------------------------------------------
+# The booking form is a Forminator form built in wp-admin (see docs/adr/0003) and
+# restored from the DB snapshot (import-db.sh), so book-the-grounds.html embeds
+# its [forminator_form id="…"] shortcode literally — nothing to bootstrap here.
+
 # Substitute the media tokens in a page template, emitting block markup with the
 # freshly-imported attachment IDs/URLs (which differ after every DB reset).
 render() {
@@ -65,16 +70,21 @@ render() {
 }
 
 # --- Pages -------------------------------------------------------------------
-# Creates or updates a page by slug. $1=slug $2=title $3=content-file
+# Creates or updates a page by slug. $1=slug $2=title $3=content-file $4=parent-slug(optional)
 upsert_page() {
-  slug="$1"; title="$2"; file="$3"
+  slug="$1"; title="$2"; file="$3"; parent_slug="${4:-}"
+  parent_id=0
+  if [ -n "$parent_slug" ]; then
+    parent_id=$($WP post list --post_type=page --name="$parent_slug" --field=ID --posts_per_page=1 2>/dev/null | head -n1)
+    parent_id=${parent_id:-0}
+  fi
   content=$(render "$file")
   id=$($WP post list --post_type=page --name="$slug" --field=ID --posts_per_page=1 2>/dev/null | head -n1)
   if [ -n "$id" ]; then
-    echo "$content" | $WP post update "$id" --post_title="$title" --post_status=publish - >/dev/null
+    echo "$content" | $WP post update "$id" --post_title="$title" --post_status=publish --post_parent="$parent_id" - >/dev/null
     echo "[build]   updated $slug (#$id)"
   else
-    id=$(echo "$content" | $WP post create - --post_type=page --post_status=publish --post_title="$title" --post_name="$slug" --porcelain)
+    id=$(echo "$content" | $WP post create - --post_type=page --post_status=publish --post_title="$title" --post_name="$slug" --post_parent="$parent_id" --porcelain)
     echo "[build]   created $slug (#$id)"
   fi
   echo "$id"
@@ -84,6 +94,8 @@ echo "[build] Building pages..."
 HOME_ID=$(upsert_page home "Home" "$BUILD/pages/home.html" | tail -n1)
 upsert_page who-are-we   "Who Are We"   "$BUILD/pages/who-are-we.html" >/dev/null
 upsert_page get-involved "Get Involved" "$BUILD/pages/get-involved.html" >/dev/null
+# Booking Hire Agreement (LSC-000) — child of Get Involved. See docs/adr/0003.
+upsert_page book-the-grounds "Book the grounds" "$BUILD/pages/book-the-grounds.html" get-involved >/dev/null
 upsert_page events       "Events"       "$BUILD/pages/events.html" >/dev/null
 upsert_page media        "Media"        "$BUILD/pages/media.html" >/dev/null
 upsert_page get-in-touch "Get in Touch" "$BUILD/pages/get-in-touch.html" >/dev/null
