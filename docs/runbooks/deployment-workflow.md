@@ -252,33 +252,42 @@ The workflows read secrets from two **GitHub Environments**: `staging` and `prod
 | `SSH_PORT`        | no       | `22`                          | Defaults to `22` if unset                      |
 | `REPO_DIR`        | no       | `/opt/lsc-wordpress`          | Defaults to `/opt/lsc-wordpress` if unset      |
 
-> The `deploy` user already exists on the server with passwordless SSH and keys
-> under `/home/deploy/.ssh`. That covers logins from **your** machine (your
-> private key is on it). GitHub's runners are a *different* client and have none
-> of those keys, so CI needs its **own** keypair whose public half is added to
-> `/home/deploy/.ssh/authorized_keys`. Don't paste a personal/admin private key
-> into the secret — generate a dedicated CI key so it can be revoked on its own.
+> The `deploy` user already exists on the server with passwordless SSH and an
+> existing keypair under `/home/deploy/.ssh`. We reuse that key for CI: paste its
+> **private** half into `SSH_PRIVATE_KEY`. GitHub's runners are a separate client,
+> so this only works if the key's **public** half is in
+> `/home/deploy/.ssh/authorized_keys` on the *same* server (lets the runner log
+> *in* as `deploy`) and the key has **no passphrase** (runners can't type one).
+> A key the `deploy` user uses only to *pull from GitHub* won't meet the first
+> condition until you add its public half to `authorized_keys` — verify below.
+>
+> **Trade-off:** reusing this key means it now also lives in GitHub secrets, so
+> keep it deploy-only. If it's shared for other access (other hosts, GitHub
+> pulls), prefer a dedicated CI key instead (`ssh-keygen -t ed25519 -f
+> ~/.ssh/lsc_ci_deploy -N ""`, then `ssh-copy-id` its `.pub` to the deploy user).
 
-**Generate a dedicated CI key and authorise it for the `deploy` user** (run locally, once per server):
+**Reuse the existing `deploy` key** (run on the server as / for the `deploy` user):
 
 ```bash
-# 1. Generate a CI-only keypair (no passphrase — runners can't type one)
-ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/lsc_ci_deploy -N ""
+# 1. Find the private key and confirm it has NO passphrase (must print a key, not prompt)
+ls -la /home/deploy/.ssh/
+ssh-keygen -y -P "" -f /home/deploy/.ssh/id_ed25519 >/dev/null && echo "no passphrase ✓"
 
-# 2. Append its PUBLIC key to the deploy user's authorized_keys on the server.
-#    (ssh-copy-id uses your existing passwordless access to add it.)
-ssh-copy-id -i ~/.ssh/lsc_ci_deploy.pub deploy@lsc.abenezer-ayalneh.dev
-#    Equivalent if you prefer to do it by hand:
-#    cat ~/.ssh/lsc_ci_deploy.pub | ssh deploy@lsc.abenezer-ayalneh.dev 'cat >> /home/deploy/.ssh/authorized_keys'
+# 2. Confirm its PUBLIC half is authorised to log in as deploy. If this prints
+#    nothing, append it: cat id_ed25519.pub >> /home/deploy/.ssh/authorized_keys
+grep -qf /home/deploy/.ssh/id_ed25519.pub /home/deploy/.ssh/authorized_keys \
+  && echo "authorised ✓" || echo "NOT in authorized_keys — append it"
 
-# 3. Paste the PRIVATE key into the SSH_PRIVATE_KEY secret (whole file, incl. header/footer)
-cat ~/.ssh/lsc_ci_deploy
+# 3. Print the PRIVATE key to paste into the SSH_PRIVATE_KEY secret (whole file)
+cat /home/deploy/.ssh/id_ed25519
 ```
 
-Verify the CI key works on its own before relying on it:
+Adjust `id_ed25519` to the actual filename from step 1 (could be `id_rsa`, etc.).
+
+Verify the key can log in as `deploy` before relying on it (from any client):
 
 ```bash
-ssh -i ~/.ssh/lsc_ci_deploy deploy@lsc.abenezer-ayalneh.dev 'echo OK && whoami'
+ssh -i /path/to/that/private_key deploy@lsc.abenezer-ayalneh.dev 'echo OK && whoami'
 # Expect: OK / deploy
 ```
 
@@ -289,11 +298,11 @@ production), `.env` configured, and Docker installed — see
 
 ### Setup checklist
 
-- [ ] Generate a dedicated CI keypair per server (`ssh-keygen` above) — separate from your personal/admin keys
-- [ ] Append each CI **public** key to `/home/deploy/.ssh/authorized_keys` on the server (`ssh-copy-id`)
-- [ ] Verify the CI key logs in as `deploy` on its own (`ssh -i ... deploy@host whoami`)
+- [ ] Confirm the existing `deploy` key has no passphrase (`ssh-keygen -y -P "" -f ...`)
+- [ ] Confirm its public half is in `/home/deploy/.ssh/authorized_keys` (append if missing)
+- [ ] Verify the key logs in as `deploy` from another client (`ssh -i ... deploy@host whoami`)
 - [ ] Create `staging` and `production` GitHub Environments
-- [ ] Add `SSH_HOST` / `SSH_USER=deploy` / `SSH_PRIVATE_KEY` (+ optional `SSH_PORT`, `REPO_DIR`) to each environment
+- [ ] Add `SSH_HOST` / `SSH_USER=deploy` / `SSH_PRIVATE_KEY` (the existing deploy private key) (+ optional `SSH_PORT`, `REPO_DIR`) to each environment
 - [ ] Confirm `/opt/lsc-wordpress` is cloned and owned by `deploy` on the staging server, clone on `main` (`git branch --show-current`)
 - [ ] On the production server (when ready), ensure the clone is on `release/prod`
 - [ ] Push a trivial change to `main` and confirm the staging deploy goes green
