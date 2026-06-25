@@ -9,10 +9,10 @@
 # restores working images; no rsync needed. Idempotent and safe to re-run.
 #
 # Manual use on the server:
-#   LSC_REPO_DIR=/opt/lsc-wordpress sh /opt/lsc-wordpress/wordpress/_build/deploy.sh
+#   LSC_REPO_DIR=/home/lsc sh /home/lsc/wordpress/_build/deploy.sh
 set -e
 
-REPO_DIR="${LSC_REPO_DIR:-/opt/lsc-wordpress}"
+REPO_DIR="${LSC_REPO_DIR:-/home/lsc}"
 COMPOSE="docker compose -f docker-compose.yml -f docker-compose.prod.yml"
 WPCLI_RUN="$COMPOSE run --rm --entrypoint"
 

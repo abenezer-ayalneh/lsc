@@ -106,13 +106,13 @@ Visit `https://lsc.abenezer-ayalneh.dev` and verify:
 
 **Staging errors or blank pages:**
 - SSH to staging: `ssh user@lsc.abenezer-ayalneh.dev`
-- Check Docker logs: `cd /opt/lsc-wordpress && docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f wordpress`
+- Check Docker logs: `cd /home/lsc && docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f wordpress`
 - Restart if needed: `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
 
 **Staging database out of sync:**
 - The import may have failed. Manually re-import:
   ```bash
-  cd /opt/lsc-wordpress
+  cd /home/lsc
   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
     run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh
   ```
@@ -147,7 +147,7 @@ git push origin release/prod
 ssh user@PROD_SERVER_IP
 
 # Backup the database
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   run --rm --entrypoint wp wpcli db export - --path=/var/www/html > backup-$(date +%F-%H%M%S).sql
 ```
@@ -184,7 +184,7 @@ Alternatively, if you need to revert to a known-good database backup:
 
 ```bash
 # SSH to production
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   run --rm --entrypoint sh wpcli sh -c 'wp db import - --path=/var/www/html' < backup-2026-06-20.sql
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \
@@ -247,10 +247,10 @@ The workflows read secrets from two **GitHub Environments**: `staging` and `prod
 | Secret            | Required | Value                         | Notes                                          |
 | ----------------- | -------- | ----------------------------- | ---------------------------------------------- |
 | `SSH_HOST`        | yes      | `lsc.abenezer-ayalneh.dev`    | Server hostname or IP                          |
-| `SSH_USER`        | yes      | `deploy`                      | The existing `deploy` user (home `/home/deploy`) that owns `/opt/lsc-wordpress` |
+| `SSH_USER`        | yes      | `deploy`                      | The existing `deploy` user (home `/home/deploy`) that owns `/home/lsc` |
 | `SSH_PRIVATE_KEY` | yes      | `-----BEGIN OPENSSH...`       | Private half of the **CI** keypair (see below) |
 | `SSH_PORT`        | no       | `22`                          | Defaults to `22` if unset                      |
-| `REPO_DIR`        | no       | `/opt/lsc-wordpress`          | Defaults to `/opt/lsc-wordpress` if unset      |
+| `REPO_DIR`        | no       | `/home/lsc`          | Defaults to `/home/lsc` if unset      |
 
 > The `deploy` user already exists on the server with passwordless SSH and an
 > existing keypair under `/home/deploy/.ssh`. We reuse that key for CI: paste its
@@ -303,7 +303,7 @@ production), `.env` configured, and Docker installed — see
 - [ ] Verify the key logs in as `deploy` from another client (`ssh -i ... deploy@host whoami`)
 - [ ] Create `staging` and `production` GitHub Environments
 - [ ] Add `SSH_HOST` / `SSH_USER=deploy` / `SSH_PRIVATE_KEY` (the existing deploy private key) (+ optional `SSH_PORT`, `REPO_DIR`) to each environment
-- [ ] Confirm `/opt/lsc-wordpress` is cloned and owned by `deploy` on the staging server, clone on `main` (`git branch --show-current`)
+- [ ] Confirm `/home/lsc` is cloned and owned by `deploy` on the staging server, clone on `main` (`git branch --show-current`)
 - [ ] On the production server (when ready), ensure the clone is on `release/prod`
 - [ ] Push a trivial change to `main` and confirm the staging deploy goes green
 - [ ] (Optional) Add a required reviewer to the `production` environment for a manual approval gate
@@ -314,7 +314,7 @@ You can trigger either workflow by hand from the **Actions** tab (`workflow_disp
 or run the script directly on the server:
 
 ```bash
-ssh deploy@SERVER 'LSC_REPO_DIR=/opt/lsc-wordpress sh /opt/lsc-wordpress/wordpress/_build/deploy.sh'
+ssh deploy@SERVER 'LSC_REPO_DIR=/home/lsc sh /home/lsc/wordpress/_build/deploy.sh'
 ```
 
 ---

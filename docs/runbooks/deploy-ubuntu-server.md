@@ -94,20 +94,20 @@ sudo ufw status
 #### Step 4: Clone the repository
 
 ```bash
-sudo mkdir -p /opt/lsc-wordpress
-sudo chown "$USER":"$USER" /opt/lsc-wordpress
-git clone <REPO_URL> /opt/lsc-wordpress
-cd /opt/lsc-wordpress
+sudo mkdir -p /home/lsc
+sudo chown "$USER":"$USER" /home/lsc
+git clone <REPO_URL> /home/lsc
+cd /home/lsc
 ```
 
 Replace `<REPO_URL>` with the actual Git remote URL.
-**Expected result:** Repo files appear under `/opt/lsc-wordpress`, including `docker-compose.yml` and `docker-compose.prod.yml`.
+**Expected result:** Repo files appear under `/home/lsc`, including `docker-compose.yml` and `docker-compose.prod.yml`.
 **If it fails:** Verify Git credentials/SSH keys and network access to the remote.
 
 #### Step 5: Create production environment file
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 cp .env.production.example .env
 nano .env   # or vim — set all change_me values and confirm WP_SITE_URL
 ```
@@ -124,7 +124,7 @@ Set at minimum:
 #### Step 6: Start the production stack
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f wpcli
 ```
@@ -149,7 +149,7 @@ curl -sI http://127.0.0.1:8080 | head -n1
 #### Step 7: Build site content (greenfield — Flow A)
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
 ```
 
@@ -165,7 +165,7 @@ Use the example site block in [`config/caddy/lsc.caddyfile.example`](../../confi
 **Option A — import snippet (recommended if you already use a modular Caddyfile):**
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 sudo mkdir -p /etc/caddy/sites
 sudo cp config/caddy/lsc.caddyfile.example /etc/caddy/sites/lsc.caddyfile
 ```
@@ -181,7 +181,7 @@ import /etc/caddy/sites/*.caddyfile
 **Option B — append directly to your existing Caddyfile:**
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 sudo tee -a /etc/caddy/Caddyfile < config/caddy/lsc.caddyfile.example
 ```
 
@@ -233,7 +233,7 @@ Content lives in **two** places, and `git pull` only updates one of them:
 **Always back up the production DB before importing** — `import-db.sh` overwrites the entire database (see Rollback):
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   run --rm --entrypoint wp wpcli db export - --path=/var/www/html > "backup-$(date +%F).sql"
 ```
@@ -261,7 +261,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
 
   ```bash
   # from your local repo root
-  rsync -avz wordpress/wp-content/uploads/ user@SERVER:/opt/lsc-wordpress/wordpress/wp-content/uploads/
+  rsync -avz wordpress/wp-content/uploads/ user@SERVER:/home/lsc/wordpress/wp-content/uploads/
   ```
 
 Theme-only CSS/PHP changes under `lsc-child/` are live immediately via the bind mount; no rebuild or import needed unless pages reference new assets or DB content.
@@ -291,7 +291,7 @@ Theme-only CSS/PHP changes under `lsc-child/` are live immediately via the bind 
 **Before any major change**, take a backup:
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint wp wpcli db export - --path=/var/www/html > "backup-$(date +%F).sql"
 tar czf "uploads-$(date +%F).tar.gz" wordpress/wp-content/uploads/
 ```
@@ -299,7 +299,7 @@ tar czf "uploads-$(date +%F).tar.gz" wordpress/wp-content/uploads/
 **To roll back code:**
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 git checkout <PREVIOUS_TAG_OR_COMMIT>
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
@@ -308,7 +308,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entry
 **To roll back database:**
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli sh -c 'wp db import - --path=/var/www/html' < backup-YYYY-MM-DD.sql
 ```
 
@@ -323,7 +323,7 @@ sudo systemctl reload caddy
 **Nuclear reset** (destroys all site data — use only on a fresh server):
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml down -v
 rm -rf wordpress/*
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
@@ -353,14 +353,14 @@ Use when final content was built locally and should be copied to production inst
 ```bash
 cd /path/to/lewisham-sports-consortium
 docker compose run --rm --entrypoint wp wpcli db export - --path=/var/www/html > lsc-export.sql
-rsync -avz wordpress/wp-content/uploads/ user@SERVER:/opt/lsc-wordpress/wordpress/wp-content/uploads/
-scp lsc-export.sql user@SERVER:/opt/lsc-wordpress/
+rsync -avz wordpress/wp-content/uploads/ user@SERVER:/home/lsc/wordpress/wp-content/uploads/
+scp lsc-export.sql user@SERVER:/home/lsc/
 ```
 
 **On server** (after Steps 1–6 complete):
 
 ```bash
-cd /opt/lsc-wordpress
+cd /home/lsc
 cat lsc-export.sql | docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli sh -c 'wp db import - --path=/var/www/html'
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint wp wpcli search-replace 'http://localhost:8080' 'https://www.lsportsc.org' --all-tables --path=/var/www/html
