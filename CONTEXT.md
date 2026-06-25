@@ -28,6 +28,8 @@ Glossary of the language we use on this project. Terms only — no implementatio
 
 **Image slot** — A position in a Mary's template that holds a photo. In the LSC build these are filled with **neutral placeholder blocks**, not Mary's photography, until real LSC imagery is supplied.
 
+**Content gutter** — The horizontal breathing space kept between page content and the screen edge on narrow screens, so text and images never run flush to (or look cropped at) the left/right edges on mobile. Full-width colour **bands** keep their backgrounds edge-to-edge; only the content inside them is inset by the gutter.
+
 ## Deployment
 
 **Main branch** — The canonical source branch for **staging**. Every commit to `main` triggers an automatic deploy to the staging server (`lsc.abenezer-ayalneh.dev`). Main is the single source of truth for testing; it is not protected (direct commits allowed, but prefer PRs once you need code review).

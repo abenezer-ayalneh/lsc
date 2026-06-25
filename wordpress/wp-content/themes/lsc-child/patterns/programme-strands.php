@@ -69,8 +69,8 @@ foreach ( $strands as $s ) {
 	$cols = $image_first ? ( $image_col . $text_col ) : ( $text_col . $image_col );
 
 	$bands .= '
-<!-- wp:group {"align":"full","backgroundColor":"' . $color . '","style":{"spacing":{"padding":{"left":"2rem","right":"2rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-' . $color . '-background-color has-background" style="padding-left:2rem;padding-right:2rem"><!-- wp:columns {"align":"wide","verticalAlignment":"center"} -->
+<!-- wp:group {"align":"full","backgroundColor":"' . $color . '","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-' . $color . '-background-color has-background"><!-- wp:columns {"align":"wide","verticalAlignment":"center"} -->
 <div class="wp-block-columns alignwide are-vertically-aligned-center">' . $cols . '</div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->';

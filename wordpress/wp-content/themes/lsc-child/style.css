@@ -4,7 +4,7 @@ Theme URI:    https://www.lsportsc.org
 Description:  Child theme of Kadence for the Lewisham Sports Consortium website. Visual design is a pixel-clone of marys.org.uk (League Spartan headings, Quicksand body, vibrant tile palette). See docs/adr/0001.
 Author:       Lewisham Sports Consortium
 Template:     kadence
-Version:      0.3.3
+Version:      0.3.4
 Text Domain:  lsc-child
 */
 
@@ -96,6 +96,35 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
    (and below the last). Zero it so each page's cover band meets the header and
    the footer flush. */
 .page .content-area { margin-top: 0; margin-bottom: 0; }
+
+/* -------- Mobile content gutter --------
+   The unboxing above lets full-width bands run edge-to-edge, but it also lets
+   their content (headings, text, images, card grids) run flush to the screen
+   edge on narrow viewports — content looked cropped/too tight on mobile.
+   Add horizontal padding to the *content* only; band backgrounds stay
+   edge-to-edge. No wrapper padding or negative-margin breakout. */
+:root { --lsc-gutter: clamp(1rem, 5vw, 1.75rem); }
+
+/* Content inside full-width bands. The padding sits inside the band's box, so
+   the coloured background still spans edge-to-edge while the inner content
+   insets. The inner content keeps its max-width cap, so on a wide desktop the
+   padding is absorbed by the centring margins and nothing visibly shifts. */
+.page .alignfull,
+.home .alignfull {
+	padding-left: var(--lsc-gutter);
+	padding-right: var(--lsc-gutter);
+}
+
+/* Plain (non-band) page content only needs the gutter once the screen is too
+   narrow to keep its normal centred margins, so scope it to small screens and
+   leave the desktop measure untouched. */
+@media (max-width: 1024px) {
+	.page .entry-content > :not(.alignfull),
+	.home .entry-content > :not(.alignfull) {
+		padding-left: var(--lsc-gutter);
+		padding-right: var(--lsc-gutter);
+	}
+}
 
 /* Hero overlay legibility */
 .lsc-hero { position: relative; }
