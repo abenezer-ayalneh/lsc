@@ -16,31 +16,44 @@ $strands = array(
 		'Six pitches at Firhill Road Sports Ground — kept affordable so local teams of every age can play.',
 		array( '3 full-sized adult pitches', '1 junior pitch', '2 small-sided pitches', 'Training areas for juniors and adults' ),
 		'grounds-tractor.jpg', 'The pitches at Firhill Road Sports Ground',
+		'/book-the-grounds/', 'Book the grounds',
 	),
 	array(
 		'brand-green', 'Making a Difference — youth programme',
 		'Sport is the way in; opportunity is the goal. We combine activity with education and mentoring for young people.',
 		array( 'GCSE &amp; SAT prep — English, Maths, Science', 'Social and cultural education workshops', 'One-to-one mentorship', 'Encouragement into enterprise' ),
 		'youth-activity.jpg', 'Young people taking part in a youth activity session',
+		'', '',
 	),
 	array(
 		'brand-magenta', 'Events &amp; play schemes',
 		'The ground comes alive with community events and holiday activity for local young people.',
 		array( 'Fun days and community events', 'Summer holiday play schemes', 'Full-day and half-day hire', 'Saturday football programme' ),
 		'youth-team-trophies.jpg', 'A youth team celebrating with trophies',
+		'', '',
 	),
 );
 
 $bands = '';
 $i = 0;
 foreach ( $strands as $s ) {
-	list( $color, $title, $intro, $items, $image, $alt ) = $s;
+	list( $color, $title, $intro, $items, $image, $alt, $button_url, $button_label ) = $s;
 	$image_first = ( 0 === $i % 2 );
 	$img_url     = esc_url( $img_base . $image );
 
 	$li = '';
 	foreach ( $items as $it ) {
 		$li .= '<!-- wp:list-item --><li>' . $it . '</li><!-- /wp:list-item -->' . "\n";
+	}
+
+	$button = '';
+	if ( $button_url && $button_label ) {
+		$button = '
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"white","textColor":"' . $color . '"} -->
+<div class="wp-block-button"><a class="wp-block-button__link has-' . $color . '-color has-white-background-color has-text-color has-background wp-element-button" href="' . esc_url( $button_url ) . '">' . esc_html( $button_label ) . '</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->';
 	}
 
 	$image_col = '
@@ -63,7 +76,7 @@ foreach ( $strands as $s ) {
 <!-- /wp:paragraph -->
 <!-- wp:list {"className":"lsc-strand-list"} -->
 <ul class="wp-block-list lsc-strand-list">' . "\n" . $li . '</ul>
-<!-- /wp:list --></div>
+<!-- /wp:list -->' . $button . '</div>
 <!-- /wp:column -->';
 
 	$cols = $image_first ? ( $image_col . $text_col ) : ( $text_col . $image_col );

@@ -76,6 +76,21 @@ add_action( 'wp_head', function () {
 } );
 
 /**
+ * Book the grounds intentionally moved from a Get Involved child page to a
+ * standalone URL. Do not let WordPress preserve the old nested path via its
+ * automatic canonical redirect.
+ */
+add_filter( 'redirect_canonical', function ( $redirect_url ) {
+	$path = isset( $_SERVER['REQUEST_URI'] ) ? strtok( (string) $_SERVER['REQUEST_URI'], '?' ) : '';
+
+	if ( '/get-involved/book-the-grounds/' === $path ) {
+		return false;
+	}
+
+	return $redirect_url;
+} );
+
+/**
  * Expose the theme's logo + brand colours as a quick helper for templates.
  */
 function lsc_logo_url() {

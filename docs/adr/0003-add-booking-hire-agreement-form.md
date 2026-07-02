@@ -1,6 +1,14 @@
 # 0003 — Add a web Booking Hire Agreement form
 
-**Status:** Accepted (2026-06-19); amended (2026-06-24)
+**Status:** Accepted (2026-06-19); amended (2026-06-24, 2026-07-02)
+
+## Amendment (2026-07-02) — Standalone Book the grounds page
+
+The Booking Hire Agreement page is now a standalone page at
+`/book-the-grounds/`, not a child of Get Involved. Pitch costs and pitch-use
+ground rules live on the same page. Get Involved keeps a short teaser linking to
+Book the grounds, and the primary navigation remains the six-page set from ADR
+0002.
 
 ## Amendment (2026-06-24) — Forminator, not Contact Form 7
 
@@ -26,7 +34,7 @@ The client has now asked for a fillable web equivalent of the `LSC-000 Booking H
 
 Scope is expanded to include a single **Booking Hire Agreement** page. Specifically:
 
-- **URL / placement.** `/get-involved/book-the-grounds/` — a subpage of Get Involved, where the pricing table already sits.
+- **URL / placement.** `/book-the-grounds/` — a standalone page linked from Home and Get Involved, where the pricing table and pitch-use ground rules also sit.
 - **Submission mechanism.** Contact Form 7 (free, WP-native, volunteer-editable), delivering via `wp_mail` to `lewishamsportsconsortium@gmail.com`. In dev this routes through MailHog like the rest of the stack.
 - **Signature.** Typed full name + an "I have read, understood, and agree to the Conditions of Hire" checkbox. No wet-signature or signature-pad plugin.
 - **Conditions of Hire (PDF pp. 3–5).** Rendered inline below the form inside a collapsed `<details>` accordion. Distinct from the footer "Terms of Use" (general ground rules).

@@ -1,6 +1,13 @@
 # 0002 — Redefine the page set and navigation
 
-**Status:** Accepted (2026-06-02)
+**Status:** Accepted (2026-06-02); amended (2026-07-02)
+
+## Amendment (2026-07-02) — Pricing moved to Book the grounds
+
+The pricing table remains outside the top-level navigation, but it no longer
+lives on Get Involved. The client asked for a standalone Book the grounds page
+at `/book-the-grounds/`, so pitch costs and pitch-use rules now live there.
+Get Involved keeps only a short teaser that links to Book the grounds.
 
 ## Context
 
@@ -21,7 +28,7 @@ The authoritative **page set / navigation** is:
 
 Pricing and Terms of Use are no longer top-level pages:
 
-- **Pricing table** (from `LSC_Info_Prices.pdf`) lives **inside Get Involved**.
+- **Pricing table** (from `LSC_Info_Prices.pdf`) lives on **Book the grounds**.
 - **Terms of Use** is reachable from the **footer**.
 
 `PROJECT_PLAN.md` and `CLAUDE.md` are updated to match.
@@ -29,6 +36,6 @@ Pricing and Terms of Use are no longer top-level pages:
 ## Consequences
 
 - Content from the old site (`reference/old-site/`) maps onto these six pages; About/Facilities content folds into Who Are We / Get Involved.
-- The "convert the PDF pricing to an on-page table" deliverable is preserved, relocated under Get Involved.
+- The "convert the PDF pricing to an on-page table" deliverable is preserved, relocated under Book the grounds.
 - The first build's six pages are superseded; pages are rebuilt against the new set (compounds with ADR 0001's fresh theme rebuild).
 - The IA now mirrors the old site's organisation, which may ease 301 redirect mapping from the old `.html` URLs.

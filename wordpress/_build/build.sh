@@ -115,8 +115,8 @@ echo "[build] Building pages..."
 HOME_ID=$(upsert_page home "Home" "$BUILD/pages/home.html" | tail -n1)
 upsert_page who-are-we   "Who Are We"   "$BUILD/pages/who-are-we.html" >/dev/null
 upsert_page get-involved "Get Involved" "$BUILD/pages/get-involved.html" >/dev/null
-# Booking Hire Agreement (LSC-000) — child of Get Involved. See docs/adr/0003.
-upsert_page book-the-grounds "Book the grounds" "$BUILD/pages/book-the-grounds.html" get-involved >/dev/null
+# Booking Hire Agreement (LSC-000) — standalone page. See docs/adr/0003.
+upsert_page book-the-grounds "Book the grounds" "$BUILD/pages/book-the-grounds.html" >/dev/null
 upsert_page events       "Events"       "$BUILD/pages/events.html" >/dev/null
 upsert_page media        "Media"        "$BUILD/pages/media.html" >/dev/null
 upsert_page get-in-touch "Get in Touch" "$BUILD/pages/get-in-touch.html" >/dev/null

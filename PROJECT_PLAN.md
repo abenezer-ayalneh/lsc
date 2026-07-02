@@ -65,12 +65,13 @@ Mirrors the old lsportsc.org structure. Visual design is a pixel-clone of marys.
 ```
 Home
 ├── Who Are We       (story, mission, the charity, facilities)
-├── Get Involved     (event hire + on-page pricing table; replaces the PDF)
+├── Get Involved     (youth programme + hire teaser linking to Book the grounds)
 ├── Events           (programmes, sports, summer scheme)
 ├── Media            (project docs, consultation, flyers)
 └── Get in Touch     (address, phone, email, social links, map)
 
-Footer: Terms of Use (ground rules / conditions of use)
+Linked page: Book the grounds (pitch costs, pitch-use rules, Booking Hire Agreement)
+Footer: Terms of Use (general ground rules / conditions of use)
 ```
 
 ---
@@ -102,7 +103,7 @@ Estimates assume one competent developer working with Claude Code, the chosen-th
 | Task | Hours |
 |---|---|
 | Build pages: Who Are We, Get Involved, Events, Media, Get in Touch (+ footer Terms of Use) | 10 |
-| Migrate & format existing copy; convert PDF pricing into the on-page table inside Get Involved | 5 |
+| Migrate & format existing copy; convert PDF pricing into the on-page table on Book the grounds | 5 |
 | Image sourcing/optimisation from existing assets | 3 |
 | Menus, navigation & internal linking | 2 |
 | **Subtotal** | **20 (17–24)** |
