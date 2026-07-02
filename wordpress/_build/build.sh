@@ -131,6 +131,9 @@ echo "[build] Building menus..."
 build_menu "Primary" primary home who-are-we get-involved events media get-in-touch
 build_menu "Footer"  footer  get-in-touch terms
 
+echo "[build] Seeding editable footer widget if needed..."
+$WP eval-file "$BUILD/scripts/install-footer-widget.php"
+
 echo "[build] Flushing rewrite rules..."
 $WP rewrite flush --hard >/dev/null 2>&1 || true
 

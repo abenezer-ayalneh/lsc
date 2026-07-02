@@ -19,6 +19,8 @@ echo "[import] Importing $DUMP ..."
 $WP db import "$DUMP"
 echo "[import] Rewriting __LSC_SITE_URL__ -> $SITE_URL ..."
 $WP search-replace "__LSC_SITE_URL__" "$SITE_URL" --all-tables >/dev/null
+echo "[import] Seeding editable footer widget if needed ..."
+$WP eval-file /var/www/html/_build/scripts/install-footer-widget.php
 echo "[import] Flushing rewrite rules ..."
 $WP rewrite flush --hard >/dev/null 2>&1 || true
 echo "[import] ✅ Done. Visit $SITE_URL"
