@@ -218,6 +218,7 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-footer-logos {
 	display: flex; align-items: center; gap: .75rem; margin-top: 1.25rem;
 }
+.lsc-footer-logos a { display: inline-flex; }
 .lsc-footer-logos img {
 	width: 78px; height: 78px; object-fit: contain; background: #fff;
 }
