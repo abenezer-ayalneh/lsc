@@ -4,16 +4,18 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## What this is
 
-Local Docker dev environment for rebuilding the Lewisham Sports Consortium website (http://www.lsportsc.org) on WordPress. The project is a **like-for-like content rebuild — no new features** (see `PROJECT_PLAN.md` for full scope, sitemap, and milestones). The only code authored in this repo is the **Kadence child theme**; WordPress core, plugins, and the Kadence parent theme are pulled at container runtime, not committed.
+Local Docker dev environment for rebuilding the Lewisham Sports Consortium website (http://www.lsportsc.org) on WordPress. The project is a **like-for-like content rebuild — no new features** (see `PROJECT_PLAN.md` for full scope, sitemap, and milestones). Authored assets in this repo are the **Kadence child theme**, reproducibility scripts/seed templates, the canonical DB snapshot, and tracked media uploads; WordPress core, plugins, and the Kadence parent theme are pulled at container runtime, not committed.
 
 ## Commands
 
 ```bash
 docker compose up -d                       # start the stack (first run auto-installs WP + Kadence)
 docker compose down                        # stop, keep data
-docker compose down -v && rm -rf wordpress # full reset (drops DB volume + WP files)
+docker compose down -v && git clean -fdX wordpress # full reset of DB + ignored WP runtime files
 docker compose logs -f wpcli               # watch first-run install progress
 docker compose logs -f wordpress           # tail site logs
+scripts/snapshot-admin-content.sh          # export WP Admin content before AI/code work
+scripts/check-content-safety.sh            # guard against accidental seed-template overwrites
 
 # WP-CLI: the `wpcli` service's default entrypoint runs setup.sh (the installer)
 # and ignores any command you append. Override it with `--entrypoint wp` to run
@@ -42,9 +44,16 @@ The stack is defined entirely in `docker-compose.yml` (5 services):
 
 ## Working with the child theme
 
-- The child theme is the **only** versioned part of the WordPress install. `.gitignore` ignores all of `/wordpress/` **except** `wordpress/wp-content/themes/lsc-child/`. Build and commit the theme there; everything else is reproducible from the compose file.
-- The child theme does not exist yet — it must be scaffolded under `wordpress/wp-content/themes/lsc-child/`.
+- The child theme is the only authored theme code. `.gitignore` ignores WordPress runtime files except the child theme, build reproducibility assets, the DB snapshot, and tracked media uploads.
 - Build approach is block-editor-first (Gutenberg + reusable block patterns) on top of Kadence global styles, so a volunteer can edit content after handover. Avoid page builders.
+
+## DB-snapshot-first content workflow
+
+- After the initial build, `wordpress/_build/db/lsc-db.sql` is the canonical source for page content, menus, widgets, options, and forms. WP Admin edits win over seed templates.
+- Before making AI/code changes, run `scripts/snapshot-admin-content.sh` unless the user explicitly says there were no WP Admin edits. Commit the DB snapshot and any changed `wordpress/wp-content/uploads/` files together.
+- AI content changes must be made through local WordPress/WP-CLI and then exported. Do **not** edit `wordpress/_build/db/lsc-db.sql` directly.
+- `wordpress/_build/pages/*.html`, `wordpress/_build/footer.html`, and the page-upsert path in `wordpress/_build/build.sh` are **seed templates** only. Do not edit them for normal content changes. Intentional seed changes require `[seed-content]` in the commit message or `LSC_ALLOW_SEED_CONTENT=1` for the safety check.
+- `wordpress/_build/build.sh` refuses to overwrite existing pages unless `LSC_ALLOW_SEED_REBUILD=1` is set. Prefer `wordpress/_build/import-db.sh` for restoring content.
 
 ## Scope guardrails
 

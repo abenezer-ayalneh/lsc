@@ -46,7 +46,7 @@ docker compose run --rm --entrypoint wp wpcli plugin list --path=/var/www/html
 
 ```bash
 docker compose --profile dev down -v   # also drops the database volume
-rm -rf wordpress         # removes WordPress core/uploads
+git clean -fdX wordpress # removes ignored WP runtime files, keeps tracked theme/uploads/snapshots
 docker compose --profile dev up -d     # fresh install
 ```
 
@@ -59,9 +59,11 @@ docker compose --profile dev up -d     # fresh install
   (configured via `config/mu-plugins/00-mailhog.php`).
 
 ## Child theme & Git
-`.gitignore` excludes the WordPress install **except** the child theme at
-`wordpress/wp-content/themes/lsc-child/`. Build the Kadence child theme there and
-commit it; the rest of WP is reproducible from this compose file.
+`.gitignore` excludes WordPress runtime files but keeps authored project assets:
+the child theme, reproducibility scripts, `wordpress/_build/db/lsc-db.sql`, and
+tracked uploads. After the first build, WP Admin content is canonical in the DB
+snapshot; run `scripts/snapshot-admin-content.sh` before AI/code work whenever
+admin edits may have changed content.
 
 > Production note: these credentials and the `WORDPRESS_DEBUG` flag are for local
 > dev only. LSC owns the real hosting/domain (see `PROJECT_PLAN.md` §7).

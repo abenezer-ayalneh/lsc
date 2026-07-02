@@ -1,6 +1,6 @@
 # Runbook: Git-driven deployment workflow
 
-**Owner:** Project developer | **Frequency:** Every code change | **Status:** Planning (CI/CD setup pending)
+**Owner:** Project developer | **Frequency:** Every code change | **Status:** Active
 
 ## Overview
 
@@ -21,7 +21,7 @@ All promotions are git-driven. No manual SSH or SQL copy-paste needed.
 
 ## Stage 1: Local Development
 
-Develop everything locally on your machine. Content edits are made in WordPress Admin (`http://localhost:8080/wp-admin`).
+Develop everything locally on your machine. Content edits are made in WordPress Admin (`http://localhost:8080/wp-admin`) or through WP-CLI against the local WordPress database.
 
 ### Starting a feature
 
@@ -30,6 +30,12 @@ git checkout main
 git pull
 git checkout -b feature/my-feature     # Create a feature branch
 docker compose --profile dev up -d     # Start local stack if not running
+```
+
+Before asking an AI agent to make code/theme changes, snapshot any local WP Admin work unless you are certain there were no admin edits:
+
+```bash
+scripts/snapshot-admin-content.sh
 ```
 
 ### Making changes
@@ -46,24 +52,37 @@ docker compose --profile dev up -d     # Start local stack if not running
 # Use the Forminator plugin for the Booking Hire Agreement form if needed
 ```
 
+After the initial build, the canonical content source is `wordpress/_build/db/lsc-db.sql`. Do not edit the SQL directly; make content changes in local WordPress and export them. Do not edit `wordpress/_build/pages/*.html` for normal content changes — those files are seed templates only.
+
 ### Exporting content before committing
 
 Once you've made content changes locally, **export the database** so they can be versioned and promoted to staging/prod:
 
 ```bash
 cd /path/to/lewisham-sports-consortium
-docker compose run --rm --entrypoint wp wpcli db export - --path=/var/www/html > _build/db/lsc-db.sql
+scripts/snapshot-admin-content.sh
 ```
 
-This overwrites `_build/db/lsc-db.sql` with the latest state. **Commit this file.**
+This overwrites `wordpress/_build/db/lsc-db.sql` with the latest state. **Commit this file.**
 
 Also, if you added new images/media via the Media Library, commit the upload
 files so they deploy with the next push:
 
 ```bash
-git add wordpress/wp-content/uploads
+git add wordpress/_build/db/lsc-db.sql wordpress/wp-content/uploads
 # (plugin runtime dirs — forminator/, wpcf7_uploads/ — are gitignored automatically)
 ```
+
+### Seed rebuilds
+
+`wordpress/_build/build.sh` is for greenfield/reset seeding only. On an existing site it refuses to update pages unless you deliberately opt in:
+
+```bash
+docker compose run --rm --entrypoint sh -e LSC_ALLOW_SEED_REBUILD=1 \
+  wpcli /var/www/html/_build/build.sh
+```
+
+Intentional seed-template commits must include `[seed-content]` in the commit message, or `scripts/check-content-safety.sh` and CI will block them.
 
 ### Committing and pushing
 
@@ -234,9 +253,10 @@ The automation is **implemented** in three files:
 - [`wordpress/_build/deploy.sh`](../../wordpress/_build/deploy.sh) — the actual deploy logic, run **on the server** over SSH
 
 Each workflow just SSHes into the right server and runs `deploy.sh`, which:
-backs up the current DB → `git fetch` + `git reset --hard` to the tracked branch →
-`docker compose up -d` → waits for WordPress → runs `import-db.sh`. Media rides
-along in git (`wp-content/uploads/` is tracked), so no separate media sync is needed.
+checks content safety → SSHes to the server → backs up the current DB →
+`git fetch` + `git reset --hard` to the tracked branch → `docker compose up -d`
+→ waits for WordPress → runs `import-db.sh`. Media rides along in git
+(`wp-content/uploads/` is tracked), so no separate media sync is needed.
 
 Until secrets are configured, each workflow **self-skips with a warning** (green run, not red) so an unconfigured push doesn't fail noisily.
 
@@ -323,7 +343,8 @@ ssh deploy@SERVER 'LSC_REPO_DIR=/home/lsc sh /home/lsc/wordpress/_build/deploy.s
 
 | Symptom | Likely Cause | Fix |
 |---------|--------------|-----|
-| Staging not updating after push | DB export not committed | Run `docker compose run --rm --entrypoint wp wpcli db export - > _build/db/lsc-db.sql`, `git add _build/db/lsc-db.sql`, `git commit`, `git push` |
+| Staging not updating after push | DB export not committed | Run `scripts/snapshot-admin-content.sh`, then `git add wordpress/_build/db/lsc-db.sql wordpress/wp-content/uploads`, commit, and push |
+| Deploy blocked by seed-content check | Seed templates or `build.sh` changed without an explicit marker | If intentional, recommit with `[seed-content]` in the commit message. Otherwise move the content change into local WordPress, export with `scripts/snapshot-admin-content.sh`, and revert the seed-template edit. |
 | GitHub Actions workflow failing | Deploy key not installed or SSH permissions wrong | Check Actions logs; verify deploy key is in GitHub Secrets and authorized on server |
 | Staging old content but code new | Import-db.sh failed silently | SSH to staging, manually run: `docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh` |
 | Production won't start after deploy | Docker Compose config mismatch | SSH to production, run: `docker compose -f docker-compose.yml -f docker-compose.prod.yml logs -f` to see errors |

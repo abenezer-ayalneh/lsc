@@ -30,6 +30,15 @@ Glossary of the language we use on this project. Terms only — no implementatio
 
 **Content gutter** — The horizontal breathing space kept between page content and the screen edge on narrow screens, so text and images never run flush to (or look cropped at) the left/right edges on mobile. Full-width colour **bands** keep their backgrounds edge-to-edge; only the content inside them is inset by the gutter.
 
+**DB snapshot** — The exported WordPress database state that is canonical for page content, menus, widgets, options, forms, and other admin-managed content after the initial build. Do not use the seed templates as the content source of truth once a DB snapshot exists.
+_Avoid_: SQL dump, template content
+
+**Seed templates** — The HTML files used to create the first version of the pages on a greenfield WordPress install. They are reset/bootstrap material only; they are not the canonical source for ongoing content changes.
+_Avoid_: Page source, canonical templates
+
+**Snapshot-first workflow** — The rule that local WP Admin edits are exported to the DB snapshot before AI or code work continues, so admin-managed content is preserved in git before other changes are made.
+_Avoid_: Rebuild-first workflow, template sync
+
 ## Deployment
 
 **Main branch** — The canonical source branch for **staging**. Every commit to `main` triggers an automatic deploy to the staging server (`lsc.abenezer-ayalneh.dev`). Main is the single source of truth for testing; it is not protected (direct commits allowed, but prefer PRs once you need code review).

@@ -153,8 +153,8 @@ cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
 ```
 
-**Expected result:** Script prints `[build] ✅ Done` and creates/updates pages (Home, Who Are We, Get Involved, Events, Media, Get in Touch, Terms of Use), menus, and media imports.
-**If it fails:** Check that `wordpress/wp-content/themes/lsc-child/` exists in the clone. Re-run the command — `build.sh` is idempotent.
+**Expected result:** Script prints `[build] ✅ Done` and creates pages (Home, Who Are We, Get Involved, Events, Media, Get in Touch, Terms of Use), menus, and media imports.
+**If it fails because LSC pages already exist:** Use `import-db.sh` instead, or set `LSC_ALLOW_SEED_REBUILD=1` only when deliberately overwriting page content from seed templates. For other failures, check that `wordpress/wp-content/themes/lsc-child/` exists in the clone.
 
 Skip this step if you are promoting an existing database (Flow B — see Appendix A).
 
@@ -225,10 +225,10 @@ WordPress PHP `mail()` is unreliable on most VPS hosts. When LSC provides SMTP c
 
 ### Updating the site (routine deploy)
 
-Content lives in **two** places, and `git pull` only updates one of them:
+Content lives in the committed DB snapshot after the initial build:
 
 - **Theme code** (`lsc-child/` — `style.css`, `functions.php`, `assets/`) is bind-mounted, so it is **live the moment you pull** (a container restart at most). No rebuild needed.
-- **Page content, menus, and the Forminator booking form** live in the **WordPress database** (a Docker volume on the server). `git pull` never touches the DB — you must restore the committed snapshot to bring these across.
+- **Page content, menus, widgets, options, and the Forminator booking form** live in the **WordPress database**. Deploys restore the committed snapshot at `wordpress/_build/db/lsc-db.sql`; WP Admin edits must be made locally, exported, committed, and deployed.
 
 **Always back up the production DB before importing** — `import-db.sh` overwrites the entire database (see Rollback):
 
@@ -238,7 +238,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   run --rm --entrypoint wp wpcli db export - --path=/var/www/html > "backup-$(date +%F).sql"
 ```
 
-Pull the latest code, templates, and DB snapshot, then bring the stack up:
+Pull the latest code, seed templates, DB snapshot, and tracked uploads, then bring the stack up:
 
 ```bash
 git pull
@@ -252,17 +252,12 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh
 ```
 
-> **Use `import-db.sh`, not `build.sh`, for content that includes the booking form.** `build.sh` rebuilds pages from the HTML templates but does **not** recreate the Forminator form — that exists only in the DB snapshot (`_build/db/lsc-db.sql`). `build.sh` remains the right tool only for a greenfield first build with no snapshot to restore (Step 7).
+> **Use `import-db.sh`, not `build.sh`, for content.** `build.sh` seeds pages from HTML seed templates and now refuses to overwrite existing pages unless `LSC_ALLOW_SEED_REBUILD=1` is set. The DB snapshot (`wordpress/_build/db/lsc-db.sql`) is canonical after the first build.
 
 **Caveats:**
 
-- **`import-db.sh` is a one-way push (local → prod).** It replaces the whole production database, so any content edited directly in production wp-admin (and any form submissions stored there) is wiped and replaced by the snapshot. The backup above is your safety net. This matches the intended workflow: author locally → `export-db.sh` → commit → `import-db.sh` on prod.
-- **Media files are not in the snapshot.** `wp-content/uploads/` is gitignored; the DB references attachments by path/ID but the actual image files are not shipped in git. If new content references images that weren't already on the server from a prior build, copy them up from your local machine:
-
-  ```bash
-  # from your local repo root
-  rsync -avz wordpress/wp-content/uploads/ user@SERVER:/home/lsc/wordpress/wp-content/uploads/
-  ```
+- **`import-db.sh` is a one-way push (local → prod).** It replaces the whole production database, so any content edited directly in production wp-admin (and any form submissions stored there) is wiped and replaced by the snapshot. The backup above is your safety net. This matches the intended workflow: author locally → `scripts/snapshot-admin-content.sh` or `export-db.sh` → commit → `import-db.sh` on prod.
+- **Media files are not in the DB snapshot, but uploads are tracked in git.** Commit changed files under `wordpress/wp-content/uploads/` alongside the DB snapshot. Plugin runtime upload dirs remain ignored.
 
 Theme-only CSS/PHP changes under `lsc-child/` are live immediately via the bind mount; no rebuild or import needed unless pages reference new assets or DB content.
 
@@ -302,7 +297,7 @@ tar czf "uploads-$(date +%F).tar.gz" wordpress/wp-content/uploads/
 cd /home/lsc
 git checkout <PREVIOUS_TAG_OR_COMMIT>
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
+docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh
 ```
 
 **To roll back database:**
@@ -325,7 +320,7 @@ sudo systemctl reload caddy
 ```bash
 cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml down -v
-rm -rf wordpress/*
+git clean -fdX wordpress
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 # Re-run Steps 6–8
 ```
@@ -346,31 +341,30 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ### Appendix A: Promote from local/staging (Flow B)
 
-Use when final content was built locally and should be copied to production instead of re-running `build.sh`.
+Use when final content was built locally and should be promoted through the committed DB snapshot instead of re-running `build.sh`.
 
 **On local machine:**
 
 ```bash
 cd /path/to/lewisham-sports-consortium
-docker compose run --rm --entrypoint wp wpcli db export - --path=/var/www/html > lsc-export.sql
-rsync -avz wordpress/wp-content/uploads/ user@SERVER:/home/lsc/wordpress/wp-content/uploads/
-scp lsc-export.sql user@SERVER:/home/lsc/
+scripts/snapshot-admin-content.sh
+git add wordpress/_build/db/lsc-db.sql wordpress/wp-content/uploads
+git commit -m "Snapshot wp-admin content"
+git push
 ```
 
 **On server** (after Steps 1–6 complete):
 
 ```bash
 cd /home/lsc
-cat lsc-export.sql | docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli sh -c 'wp db import - --path=/var/www/html'
-
-docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint wp wpcli search-replace 'http://localhost:8080' 'https://www.lsportsc.org' --all-tables --path=/var/www/html
-docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint wp wpcli rewrite flush --hard --path=/var/www/html
+git pull
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+  run --rm --entrypoint sh wpcli /var/www/html/_build/import-db.sh
 ```
 
-Replace URLs to match your local/staging source URL and production domain.
-
 **Expected result:** Production site mirrors local content and media.
-**If it fails:** Run search-replace again for any remaining old URLs (`wp search-replace --dry-run` first). Skip Step 7 (build.sh) unless you need to refresh templates on top of imported content.
+**If it fails:** Check that `wordpress/_build/db/lsc-db.sql` and uploads were committed and that `WP_SITE_URL` is correct in `.env`. Skip Step 7 (`build.sh`) unless you are deliberately resetting seed content.
 
 ---
 
@@ -400,4 +394,3 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entry
 | Date | Run By | Notes |
 | ---- | ------ | ----- |
 | —    | —      | —     |
-

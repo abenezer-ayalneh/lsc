@@ -1,6 +1,10 @@
 #!/bin/sh
-# Builds the LSC site content via WP-CLI. Idempotent: re-running updates pages
-# in place rather than duplicating them. Run from the wpcli container:
+# Seeds the LSC site content via WP-CLI from the HTML seed templates. After the
+# initial build, WP Admin + wordpress/_build/db/lsc-db.sql are canonical for
+# content. Re-running this script on an installed site can overwrite admin-panel
+# edits, so it is blocked unless LSC_ALLOW_SEED_REBUILD=1 is set.
+#
+# Run from the wpcli container:
 #   docker compose run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
 #
 # Visual design is a pixel-clone of marys.org.uk (see docs/adr/0001); the page
@@ -14,6 +18,21 @@ WP="wp --path=/var/www/html"
 BUILD=/var/www/html/_build
 THEME_IMG=/var/www/html/wp-content/themes/lsc-child/assets/images
 MEDIA=/var/www/html/_build/media
+
+existing_lsc_page=""
+for slug in home who-are-we get-involved book-the-grounds events media get-in-touch terms; do
+  existing_lsc_page=$($WP post list --post_type=page --post_status=any --name="$slug" --field=ID --posts_per_page=1 2>/dev/null | head -n1 || true)
+  [ -n "$existing_lsc_page" ] && break
+done
+
+if [ -n "$existing_lsc_page" ] && [ "${LSC_ALLOW_SEED_REBUILD:-}" != "1" ]; then
+  echo "[build] ERROR: This site already has LSC pages."
+  echo "[build] WP Admin content is canonical after the initial build."
+  echo "[build] Run import-db.sh to restore the DB snapshot, or set"
+  echo "[build] LSC_ALLOW_SEED_REBUILD=1 only when intentionally rebuilding"
+  echo "[build] from seed templates and overwriting admin-edited page content."
+  exit 1
+fi
 
 echo "[build] Activating lsc-child theme..."
 $WP theme activate lsc-child
@@ -70,6 +89,8 @@ render() {
 }
 
 # --- Pages -------------------------------------------------------------------
+# These are seed pages only. Normal content changes must be made in WP Admin or
+# via WP-CLI against the local DB, then exported with export-db.sh.
 # Creates or updates a page by slug. $1=slug $2=title $3=content-file $4=parent-slug(optional)
 upsert_page() {
   slug="$1"; title="$2"; file="$3"; parent_slug="${4:-}"

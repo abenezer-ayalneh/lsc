@@ -2,7 +2,8 @@
 # Exports the WordPress database — everything you changed in wp-admin (pages,
 # posts, menus, widgets, options, Customizer, Forminator forms) — into a git-tracked
 # SQL file, so admin-panel work survives a `docker compose down -v` reset and
-# can be pushed to GitHub. This is the inverse of build.sh.
+# can be pushed to GitHub. After the initial build, this DB snapshot is the
+# canonical source for page/content state; build.sh is seed/reset tooling only.
 #
 # Run from the wpcli container:
 #   docker compose run --rm --entrypoint sh wpcli /var/www/html/_build/export-db.sh
@@ -17,10 +18,9 @@
 # the same dump restores cleanly on localhost or behind an ngrok tunnel.
 # Restore it with import-db.sh.
 #
-# NOTE: media files (wp-content/uploads/) are NOT in this dump — they're
-# gitignored. Photos referenced by the build live in _build/media/ and are
-# re-imported by build.sh; anything you uploaded ad-hoc via the Media Library
-# won't be tracked by this script.
+# NOTE: media files (wp-content/uploads/) are NOT in this dump. This project
+# tracks uploads in git (except plugin runtime dirs), so commit new/changed
+# upload files alongside wordpress/_build/db/lsc-db.sql.
 set -e
 
 export HOME=/tmp
@@ -34,4 +34,5 @@ echo "[export] Writing dump (URL -> __LSC_SITE_URL__) ..."
 $WP search-replace "$SITE_URL" "__LSC_SITE_URL__" --all-tables --export="$OUT" >/dev/null
 echo "[export] ✅ Done. Tracked at wordpress/_build/db/lsc-db.sql"
 echo "[export]    Commit & push it:"
-echo "[export]    git add wordpress/_build/db/lsc-db.sql && git commit -m 'Snapshot wp-admin content' && git push"
+echo "[export]    git add wordpress/_build/db/lsc-db.sql wordpress/wp-content/uploads"
+echo "[export]    git commit -m 'Snapshot wp-admin content' && git push"
