@@ -4,7 +4,7 @@ Theme URI:    https://www.lsportsc.org
 Description:  Child theme of Kadence for the Lewisham Sports Consortium website. Visual design is a pixel-clone of marys.org.uk (League Spartan headings, Quicksand body, vibrant tile palette). See docs/adr/0001.
 Author:       Lewisham Sports Consortium
 Template:     kadence
-Version:      0.3.4
+Version:      0.3.5
 Text Domain:  lsc-child
 */
 
@@ -224,6 +224,117 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-strand-list li::before {
 	content: "›"; position: absolute; left: 0; font-weight: 800;
 	font-family: 'League Spartan', sans-serif;
+}
+
+/* -------- Who Are We tabs -------- */
+.lsc-who-banner.alignfull {
+	margin-bottom: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.lsc-who-banner img {
+	display: block;
+	height: auto;
+	object-fit: contain;
+	width: 100%;
+}
+
+.lsc-tabs {
+	background: #fff;
+	margin: 0 auto;
+	max-width: 1000px;
+	padding: 0 var(--lsc-gutter) 3rem;
+}
+
+.lsc-tablist {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0;
+	justify-content: center;
+	margin: 0 auto 2rem;
+}
+
+.lsc-tab {
+	appearance: none;
+	background: #f7f7f7;
+	border: 1px solid #d2d2d2;
+	color: #555;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'League Spartan', system-ui, sans-serif;
+	font-size: 1rem;
+	font-weight: 800;
+	letter-spacing: .04em;
+	line-height: 1;
+	min-height: 48px;
+	min-width: 170px;
+	padding: .75rem 1.4rem;
+	text-transform: uppercase;
+}
+
+.lsc-tab[aria-selected="true"] {
+	background: #fff;
+	border-top: 4px solid var(--brand-orange);
+	color: var(--brand-navy);
+	padding-top: calc(.75rem - 3px);
+}
+
+.lsc-tab:focus-visible {
+	outline: 3px solid var(--brand-orange);
+	outline-offset: 3px;
+	z-index: 1;
+}
+
+.lsc-tab-panel[hidden] {
+	display: none !important;
+}
+
+.lsc-tab-panel {
+	margin: 0 auto;
+	max-width: var(--wp--style--global--content-size);
+}
+
+.lsc-tab-panel > :first-child {
+	margin-top: 0;
+}
+
+.lsc-project-docs {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin-top: 2rem;
+}
+
+.lsc-project-docs a,
+.lsc-project-docs img {
+	display: block;
+}
+
+.lsc-project-docs img {
+	height: auto;
+	width: 100%;
+}
+
+@media (max-width: 767px) {
+	.lsc-tabs {
+		padding-bottom: 2.5rem;
+	}
+
+	.lsc-tablist {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.lsc-tab {
+		width: 100%;
+	}
+
+	.lsc-project-docs {
+		grid-template-columns: 1fr;
+	}
 }
 
 /* -------- Get in Touch: contact card + map card -------- */

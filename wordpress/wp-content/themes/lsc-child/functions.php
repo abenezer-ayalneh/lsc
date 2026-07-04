@@ -25,6 +25,17 @@ add_action( 'wp_enqueue_scripts', function () {
 		array( 'kadence-parent-style' ),
 		wp_get_theme()->get( 'Version' )
 	);
+
+	$tabs_script = get_stylesheet_directory() . '/assets/js/lsc-tabs.js';
+	if ( file_exists( $tabs_script ) ) {
+		wp_enqueue_script(
+			'lsc-tabs',
+			get_stylesheet_directory_uri() . '/assets/js/lsc-tabs.js',
+			array(),
+			filemtime( $tabs_script ),
+			true
+		);
+	}
 } );
 
 /**
