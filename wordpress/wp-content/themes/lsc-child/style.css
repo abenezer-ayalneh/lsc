@@ -133,6 +133,61 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
    border). !important overrides the cover block's inline min-height. */
 .home .lsc-hero { min-height: calc(100vh - 84px) !important; }
 
+@media (max-width: 767px) {
+	.home .lsc-hero {
+		align-items: flex-end;
+		background: var(--brand-navy);
+		min-height: 560px !important;
+		padding-top: 4rem !important;
+		padding-bottom: 3rem !important;
+	}
+	.home .lsc-hero .wp-block-cover__image-background {
+		object-fit: contain !important;
+		object-position: center top;
+	}
+	.home .lsc-hero .wp-block-cover__background {
+		opacity: .74;
+	}
+	.home .lsc-hero .wp-block-cover__inner-container {
+		max-width: 34rem;
+	}
+	.home .lsc-hero p:first-child {
+		font-size: .9rem !important;
+		letter-spacing: 1.2px !important;
+		margin-bottom: .65rem;
+	}
+	.home .lsc-hero h1 {
+		font-size: clamp(2rem, 9.2vw, 2.7rem) !important;
+		line-height: 1;
+		margin-bottom: .85rem;
+	}
+	.home .lsc-hero h1 + p {
+		font-size: 1.12rem !important;
+		line-height: 1.38;
+		margin-bottom: 1.35rem;
+	}
+	.home .lsc-hero .wp-block-buttons {
+		align-items: stretch;
+		flex-direction: column;
+		gap: .75rem;
+	}
+	.home .lsc-hero .wp-block-button,
+	.home .lsc-hero .wp-block-button__link {
+		width: 100%;
+	}
+	.home .lsc-hero .wp-block-button__link {
+		padding: .78em 1.2em !important;
+	}
+}
+
+@media (max-width: 380px) {
+	.home .lsc-hero {
+		min-height: 520px !important;
+		padding-top: 3.25rem !important;
+		padding-bottom: 2.5rem !important;
+	}
+}
+
 /* -------- Programme tiles (Mary's colourful category grid) -------- */
 .lsc-tile {
 	border-radius: 18px;
