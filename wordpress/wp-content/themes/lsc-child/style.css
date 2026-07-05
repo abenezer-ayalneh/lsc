@@ -247,6 +247,24 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	padding: 0 var(--lsc-gutter) 3rem;
 }
 
+.lsc-page-who-are-we .entry.content-bg.single-entry {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.lsc-who-tabs {
+	background: transparent;
+	box-sizing: border-box;
+	font-size: 1.05rem;
+	line-height: 1.75;
+	max-width: 1240px;
+	padding-left: var(--lsc-gutter);
+	padding-right: var(--lsc-gutter);
+	padding-top: 3.5rem;
+	padding-bottom: 4rem;
+	width: 100%;
+}
+
 .lsc-tablist {
 	display: flex;
 	flex-wrap: wrap;
@@ -297,6 +315,15 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	max-width: var(--wp--style--global--content-size);
 }
 
+.lsc-who-tabs .lsc-tab-panel {
+	max-width: 1120px;
+}
+
+.lsc-who-tabs .lsc-tab-panel h2 {
+	color: var(--brand-navy);
+	overflow-wrap: anywhere;
+}
+
 .lsc-tab-panel > :first-child {
 	margin-top: 0;
 }
@@ -323,9 +350,21 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 		padding-bottom: 2.5rem;
 	}
 
+	.lsc-who-tabs {
+		font-size: 1rem;
+		line-height: 1.65;
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+
 	.lsc-tablist {
 		display: grid;
 		grid-template-columns: 1fr;
+	}
+
+	.lsc-who-tabs .lsc-tab-panel h2 {
+		font-size: 1.55rem;
+		line-height: 1.18;
 	}
 
 	.lsc-tab {

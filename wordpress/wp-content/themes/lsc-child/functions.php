@@ -23,7 +23,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		'lsc-child-style',
 		get_stylesheet_uri(),
 		array( 'kadence-parent-style' ),
-		wp_get_theme()->get( 'Version' )
+		filemtime( get_stylesheet_directory() . '/style.css' )
 	);
 
 	$tabs_script = get_stylesheet_directory() . '/assets/js/lsc-tabs.js';
@@ -89,6 +89,10 @@ add_action( 'wp_head', function () {
 add_filter( 'body_class', function ( $classes ) {
 	if ( is_page( 'get-involved' ) ) {
 		$classes[] = 'lsc-page-get-involved';
+	}
+
+	if ( is_page( 'who-are-we' ) ) {
+		$classes[] = 'lsc-page-who-are-we';
 	}
 
 	return $classes;
