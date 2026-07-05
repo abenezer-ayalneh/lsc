@@ -28,6 +28,12 @@ Glossary of the language we use on this project. Terms only — no implementatio
 
 **Hirer** — The person, club, or organisation booking Firhill Road Sports Ground for an event. Single-source term — do not use "renter", "customer", "client", or "booker".
 
+**Volunteer Application** — The online form where someone offers their time and skills for LSC volunteer roles such as events, grounds maintenance, catering, coaching support, administration, fundraising, media, social media, reception, or general volunteering. Lives at `/become-a-volunteer/`. See `docs/adr/0006`.
+
+**Volunteer Applicant** — A person who submits a Volunteer Application. Distinct from a Hirer: they are applying to support LSC rather than booking the grounds.
+
+**Contact Form** — The general enquiry form on **Get in Touch** where website visitors send a message to LSC by email. Distinct from the Booking Hire Agreement and Volunteer Application.
+
 **Image slot** — A position in a Mary's template that holds a photo. In the LSC build these are filled with **neutral placeholder blocks**, not Mary's photography, until real LSC imagery is supplied.
 
 **Content gutter** — The horizontal breathing space kept between page content and the screen edge on narrow screens, so text and images never run flush to (or look cropped at) the left/right edges on mobile. Full-width colour **bands** keep their backgrounds edge-to-edge; only the content inside them is inset by the gutter.

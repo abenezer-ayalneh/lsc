@@ -95,6 +95,10 @@ add_filter( 'body_class', function ( $classes ) {
 		$classes[] = 'lsc-page-who-are-we';
 	}
 
+	if ( is_page( 'events' ) ) {
+		$classes[] = 'lsc-page-events';
+	}
+
 	return $classes;
 } );
 

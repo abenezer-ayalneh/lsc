@@ -40,6 +40,15 @@ echo "[setup] Installing Kadence parent theme..."
 wp theme install kadence --path=/var/www/html || \
   echo "[setup] WARN: could not install Kadence (check internet access). Continuing."
 
+echo "[setup] Installing Forminator form plugin..."
+if wp plugin is-installed forminator --path=/var/www/html >/dev/null 2>&1; then
+  wp plugin activate forminator --path=/var/www/html || \
+    echo "[setup] WARN: could not activate Forminator. Continuing."
+else
+  wp plugin install forminator --activate --path=/var/www/html || \
+    echo "[setup] WARN: could not install/activate Forminator (check internet access). Continuing."
+fi
+
 # Activate the LSC child theme if it's present (it's bind-mounted from the repo);
 # otherwise fall back to the Kadence parent so the site still renders.
 if wp theme is-installed lsc-child --path=/var/www/html >/dev/null 2>&1; then
@@ -55,8 +64,7 @@ fi
 echo "[setup] Removing default plugins (Hello Dolly / Akismet)..."
 wp plugin delete hello akismet --path=/var/www/html >/dev/null 2>&1 || true
 
-# The Booking Hire Agreement form is a Forminator form (see docs/adr/0003),
-# restored from the DB snapshot via import-db.sh rather than installed here.
+# Forminator forms are restored from the DB snapshot via import-db.sh.
 
 echo ""
 echo "[setup] ✅ Done."

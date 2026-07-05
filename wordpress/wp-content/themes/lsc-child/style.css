@@ -226,14 +226,16 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	font-family: 'League Spartan', sans-serif;
 }
 
-/* -------- Who Are We tabs -------- */
-.lsc-who-banner.alignfull {
+/* -------- Page image banners and tabs -------- */
+.lsc-who-banner.alignfull,
+.lsc-page-banner.alignfull {
 	margin-bottom: 0;
 	padding-left: 0;
 	padding-right: 0;
 }
 
-.lsc-who-banner img {
+.lsc-who-banner img,
+.lsc-page-banner img {
 	display: block;
 	height: auto;
 	object-fit: contain;
@@ -247,12 +249,14 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	padding: 0 var(--lsc-gutter) 3rem;
 }
 
-.lsc-page-who-are-we .entry.content-bg.single-entry {
+.lsc-page-who-are-we .entry.content-bg.single-entry,
+.lsc-page-events .entry.content-bg.single-entry {
 	margin-left: 0;
 	margin-right: 0;
 }
 
-.lsc-who-tabs {
+.lsc-who-tabs,
+.lsc-events-tabs {
 	background: transparent;
 	box-sizing: border-box;
 	font-size: 1.05rem;
@@ -315,11 +319,13 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	max-width: var(--wp--style--global--content-size);
 }
 
-.lsc-who-tabs .lsc-tab-panel {
+.lsc-who-tabs .lsc-tab-panel,
+.lsc-events-tabs .lsc-tab-panel {
 	max-width: 1120px;
 }
 
-.lsc-who-tabs .lsc-tab-panel h2 {
+.lsc-who-tabs .lsc-tab-panel h2,
+.lsc-events-tabs .lsc-tab-panel h2 {
 	color: var(--brand-navy);
 	overflow-wrap: anywhere;
 }
@@ -345,12 +351,46 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	width: 100%;
 }
 
+.lsc-events-activity-grid {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin: 1.5rem 0 2rem;
+}
+
+.lsc-events-activity-grid ul {
+	margin: 0;
+}
+
+.lsc-events-flyer {
+	margin: 2rem auto;
+	max-width: 420px;
+	text-align: center;
+}
+
+.lsc-events-flyer img,
+.lsc-events-motto img {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+.lsc-events-motto {
+	margin: 1.5rem auto 2rem;
+	max-width: 620px;
+}
+
+.lsc-events-cta {
+	font-weight: 700;
+}
+
 @media (max-width: 767px) {
 	.lsc-tabs {
 		padding-bottom: 2.5rem;
 	}
 
-	.lsc-who-tabs {
+	.lsc-who-tabs,
+	.lsc-events-tabs {
 		font-size: 1rem;
 		line-height: 1.65;
 		padding-left: 1.25rem;
@@ -362,7 +402,8 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 		grid-template-columns: 1fr;
 	}
 
-	.lsc-who-tabs .lsc-tab-panel h2 {
+	.lsc-who-tabs .lsc-tab-panel h2,
+	.lsc-events-tabs .lsc-tab-panel h2 {
 		font-size: 1.55rem;
 		line-height: 1.18;
 	}
@@ -371,7 +412,8 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 		width: 100%;
 	}
 
-	.lsc-project-docs {
+	.lsc-project-docs,
+	.lsc-events-activity-grid {
 		grid-template-columns: 1fr;
 	}
 }
@@ -436,6 +478,48 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	margin-bottom: 0;
 }
 
+.lsc-volunteer-cta {
+	margin-top: 2.5rem;
+}
+
+.lsc-volunteer-cta p {
+	font-size: 1.12rem;
+	line-height: 1.7;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 780px;
+}
+
+.lsc-volunteer-cta a {
+	color: var(--brand-green);
+	font-weight: 700;
+}
+
+.lsc-volunteer-application-page {
+	box-sizing: border-box;
+	padding-left: var(--lsc-gutter);
+	padding-right: var(--lsc-gutter);
+}
+
+.lsc-volunteer-form {
+	background: #fff;
+	border: 1px solid rgba(1,74,127,.14);
+	border-radius: 8px;
+	box-shadow: 0 10px 26px rgba(0,0,0,.08);
+	margin-top: 1.5rem;
+	padding: 1.5rem;
+}
+
+.lsc-volunteer-form .forminator-title {
+	color: var(--brand-navy);
+	font-size: 1.35rem;
+	margin-top: 1.75rem;
+}
+
+.lsc-volunteer-form .forminator-row:first-child .forminator-title {
+	margin-top: 0;
+}
+
 @media (max-width: 980px) {
 	.lsc-involved-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -469,6 +553,10 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	.lsc-involved-grid {
 		grid-template-columns: 1fr;
 	}
+
+	.lsc-volunteer-form {
+		padding: 1rem;
+	}
 }
 
 /* -------- Get in Touch: contact card + map card -------- */
@@ -487,6 +575,21 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	min-height: 420px;
 }
 .lsc-map-card iframe { height: 100%; }
+
+.lsc-contact-form {
+	background: #fff;
+	border: 1px solid rgba(1,74,127,.14);
+	border-radius: 8px;
+	box-shadow: 0 10px 26px rgba(0,0,0,.08);
+	margin-top: 1.5rem;
+	padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+	.lsc-contact-form {
+		padding: 1rem;
+	}
+}
 
 /* News/Latest cards: rounded image cap clips to the card */
 .lsc-card { overflow: hidden; }

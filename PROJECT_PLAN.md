@@ -65,12 +65,12 @@ Mirrors the old lsportsc.org structure. Visual design is a pixel-clone of marys.
 ```
 Home
 ├── Who Are We       (story, mission, the charity, facilities)
-├── Get Involved     (youth programme + hire teaser linking to Book the grounds)
+├── Get Involved     (youth programme + hire teaser linking to Book the grounds + volunteer application)
 ├── Events           (programmes, sports, summer scheme)
 ├── Media            (project docs, consultation, flyers)
 └── Get in Touch     (address, phone, email, social links, map)
 
-Linked page: Book the grounds (pitch costs, pitch-use rules, Booking Hire Agreement)
+Linked pages: Book the grounds (pitch costs, pitch-use rules, Booking Hire Agreement); Become a Volunteer (Volunteer Application)
 Footer: Terms of Use (general ground rules / conditions of use)
 ```
 

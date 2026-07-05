@@ -228,7 +228,7 @@ WordPress PHP `mail()` is unreliable on most VPS hosts. When LSC provides SMTP c
 Content lives in the committed DB snapshot after the initial build:
 
 - **Theme code** (`lsc-child/` — `style.css`, `functions.php`, `assets/`) is bind-mounted, so it is **live the moment you pull** (a container restart at most). No rebuild needed.
-- **Page content, menus, widgets, options, and the Forminator booking form** live in the **WordPress database**. Deploys restore the committed snapshot at `wordpress/_build/db/lsc-db.sql`; WP Admin edits must be made locally, exported, committed, and deployed.
+- **Page content, menus, widgets, options, and Forminator forms** live in the **WordPress database**. Deploys restore the committed snapshot at `wordpress/_build/db/lsc-db.sql`; WP Admin edits must be made locally, exported, committed, and deployed.
 
 **Always back up the production DB before importing** — `import-db.sh` overwrites the entire database (see Rollback):
 
@@ -245,7 +245,7 @@ git pull
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-Restore the committed content snapshot (pages, menus, **and the Forminator booking form**). `import-db.sh` rewrites the `__LSC_SITE_URL__` token to your `WP_SITE_URL` automatically:
+Restore the committed content snapshot (pages, menus, **and Forminator forms**). `import-db.sh` rewrites the `__LSC_SITE_URL__` token to your `WP_SITE_URL` automatically:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \

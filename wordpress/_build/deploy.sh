@@ -45,7 +45,7 @@ until $WPCLI_RUN wp wpcli core is-installed --path=/var/www/html 2>/dev/null; do
   sleep 2
 done
 
-echo "[deploy] Restoring DB snapshot (pages, menus, Forminator booking form)..."
+echo "[deploy] Restoring DB snapshot (pages, menus, Forminator forms)..."
 $WPCLI_RUN sh wpcli /var/www/html/_build/import-db.sh
 
 echo "[deploy] Pruning old local DB backups (keeping the 10 most recent)..."

@@ -49,7 +49,7 @@ scripts/snapshot-admin-content.sh
 **Content changes** (pages, menus, forms):
 ```bash
 # Edit in WP Admin at http://localhost:8080/wp-admin
-# Use the Forminator plugin for the Booking Hire Agreement form if needed
+# Use the Forminator plugin for the Booking Hire Agreement and Volunteer Application forms if needed
 ```
 
 After the initial build, the canonical content source is `wordpress/_build/db/lsc-db.sql`. Do not edit the SQL directly; make content changes in local WordPress and export them. Do not edit `wordpress/_build/pages/*.html` for normal content changes — those files are seed templates only.
@@ -112,7 +112,7 @@ Visit `https://lsc.abenezer-ayalneh.dev` and verify:
 
 - [ ] Page layouts render correctly
 - [ ] Content is up-to-date (not stale from a prior commit)
-- [ ] Forms work (Booking Hire Agreement form submits, no errors)
+- [ ] Forms work (Booking Hire Agreement and Volunteer Application forms submit, no errors)
 - [ ] Navigation menus are correct
 - [ ] Media loads (no broken images)
 - [ ] Responsive on mobile (resize browser or test on phone)
