@@ -99,7 +99,23 @@ add_filter( 'body_class', function ( $classes ) {
 		$classes[] = 'lsc-page-events';
 	}
 
+	if ( is_page( 'about' ) ) {
+		$classes[] = 'lsc-page-about';
+	}
+
 	return $classes;
+} );
+
+/**
+ * Media has been replaced by About. Keep old bookmarks and indexed URLs alive.
+ */
+add_action( 'template_redirect', function () {
+	$path = isset( $_SERVER['REQUEST_URI'] ) ? strtok( (string) $_SERVER['REQUEST_URI'], '?' ) : '';
+
+	if ( '/media' === untrailingslashit( $path ) ) {
+		wp_safe_redirect( home_url( '/about/' ), 301 );
+		exit;
+	}
 } );
 
 /**

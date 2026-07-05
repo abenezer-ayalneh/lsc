@@ -8,7 +8,7 @@
 #   docker compose run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
 #
 # Visual design is a pixel-clone of marys.org.uk (see docs/adr/0001); the page
-# set was redefined to Home/Who Are We/Get Involved/Events/Media/Get in Touch
+# set was redefined to Home/Who Are We/Get Involved/Events/About/Get in Touch
 # (see docs/adr/0002). Terms of Use lives in the footer menu only.
 set -e
 
@@ -20,7 +20,7 @@ THEME_IMG=/var/www/html/wp-content/themes/lsc-child/assets/images
 MEDIA=/var/www/html/_build/media
 
 existing_lsc_page=""
-for slug in home who-are-we get-involved book-the-grounds events media get-in-touch terms; do
+for slug in home who-are-we get-involved book-the-grounds events about get-in-touch terms; do
   existing_lsc_page=$($WP post list --post_type=page --post_status=any --name="$slug" --field=ID --posts_per_page=1 2>/dev/null | head -n1 || true)
   [ -n "$existing_lsc_page" ] && break
 done
@@ -68,6 +68,10 @@ HERITAGE_ID=$(import_media "$MEDIA/heritage-display.jpg" "Heritage display");   
 COMMITTEE_ID=$(import_media "$MEDIA/committee-meeting.jpg" "Committee meeting");           COMMITTEE_URL=$(media_url "$COMMITTEE_ID")
 GROUNDS_ID=$(import_media "$MEDIA/grounds-maintenance.jpg" "Grounds maintenance");        GROUNDS_URL=$(media_url "$GROUNDS_ID")
 TRACTOR_ID=$(import_media "$MEDIA/grounds-tractor.jpg" "Grounds tractor");                TRACTOR_URL=$(media_url "$TRACTOR_ID")
+HARRY_ID=$(import_media "$MEDIA/trustees/harry-powell.png" "Harry Powell trustee portrait");          HARRY_URL=$(media_url "$HARRY_ID")
+ASHLEY_ID=$(import_media "$MEDIA/trustees/ashley-letts.png" "Ashley Letts trustee portrait");         ASHLEY_URL=$(media_url "$ASHLEY_ID")
+LASCELLES_ID=$(import_media "$MEDIA/trustees/lascelles-dixon.png" "Lascelles Dixon trustee portrait"); LASCELLES_URL=$(media_url "$LASCELLES_ID")
+MIKE_ID=$(import_media "$MEDIA/trustees/mike-garrick.png" "Mike Garrick trustee portrait");           MIKE_URL=$(media_url "$MIKE_ID")
 
 # --- Booking Hire Agreement form ---------------------------------------------
 # The booking form is a Forminator form built in wp-admin (see docs/adr/0003) and
@@ -85,6 +89,10 @@ render() {
     -e "s|__COMMITTEE_ID__|$COMMITTEE_ID|g" -e "s|__COMMITTEE_URL__|$COMMITTEE_URL|g" \
     -e "s|__GROUNDS_ID__|$GROUNDS_ID|g"     -e "s|__GROUNDS_URL__|$GROUNDS_URL|g" \
     -e "s|__TRACTOR_ID__|$TRACTOR_ID|g"     -e "s|__TRACTOR_URL__|$TRACTOR_URL|g" \
+    -e "s|__HARRY_ID__|$HARRY_ID|g"         -e "s|__HARRY_URL__|$HARRY_URL|g" \
+    -e "s|__ASHLEY_ID__|$ASHLEY_ID|g"       -e "s|__ASHLEY_URL__|$ASHLEY_URL|g" \
+    -e "s|__LASCELLES_ID__|$LASCELLES_ID|g" -e "s|__LASCELLES_URL__|$LASCELLES_URL|g" \
+    -e "s|__MIKE_ID__|$MIKE_ID|g"           -e "s|__MIKE_URL__|$MIKE_URL|g" \
     "$1"
 }
 
@@ -118,7 +126,7 @@ upsert_page get-involved "Get Involved" "$BUILD/pages/get-involved.html" >/dev/n
 # Booking Hire Agreement (LSC-000) — standalone page. See docs/adr/0003.
 upsert_page book-the-grounds "Book the grounds" "$BUILD/pages/book-the-grounds.html" >/dev/null
 upsert_page events       "Events"       "$BUILD/pages/events.html" >/dev/null
-upsert_page media        "Media"        "$BUILD/pages/media.html" >/dev/null
+upsert_page about        "About"        "$BUILD/pages/about.html" >/dev/null
 upsert_page get-in-touch "Get in Touch" "$BUILD/pages/get-in-touch.html" >/dev/null
 upsert_page terms        "Terms of Use" "$BUILD/pages/terms.html" >/dev/null
 
@@ -127,7 +135,7 @@ $WP option update show_on_front page
 $WP option update page_on_front "$HOME_ID"
 
 # Retire pages from the previous (superseded) page set if they still exist.
-for old in about facilities pricing contact; do
+for old in media facilities pricing contact; do
   oid=$($WP post list --post_type=page --name="$old" --field=ID --posts_per_page=1 2>/dev/null | head -n1)
   [ -n "$oid" ] && $WP post delete "$oid" --force >/dev/null 2>&1 && echo "[build]   removed stale page $old (#$oid)" || true
 done
@@ -149,7 +157,7 @@ build_menu() {
 }
 
 echo "[build] Building menus..."
-build_menu "Primary" primary home who-are-we get-involved events media get-in-touch
+build_menu "Primary" primary home who-are-we get-involved events about get-in-touch
 build_menu "Footer"  footer  get-in-touch terms
 
 echo "[build] Seeding editable footer widget if needed..."

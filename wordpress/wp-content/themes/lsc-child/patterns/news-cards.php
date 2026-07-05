@@ -10,7 +10,7 @@
 $img_base = get_stylesheet_directory_uri() . '/assets/images/';
 
 $cards = array(
-	array( 'brand-navy',    'Our public consultation', 'Aerial views, location plans and Phase 1 proposals for the future of Firhill Road Sports Ground.', '/media/', 'partnership-meeting.jpg', 'Consultation meeting about the future of the ground' ),
+	array( 'brand-navy',    'Lewisham Sports Consortium Management', 'Lewisham Sports Consortium is a charity and company limited by guarantee.', '/about/', 'committee-meeting.jpg', 'Committee meeting in the clubhouse' ),
 	array( 'brand-teal',    'Saturday football is back', 'Adult, junior and small-sided fixtures across the season — find out how your team can take part.', '/events/', 'grounds-maintenance.jpg', 'The football pitches at Firhill Road Sports Ground' ),
 	array( 'brand-yellow',  'Summer play scheme', 'Sport, games and activities for local young people over the school holidays.', '/events/', 'heritage-display.jpg', 'Local people at a community event' ),
 );

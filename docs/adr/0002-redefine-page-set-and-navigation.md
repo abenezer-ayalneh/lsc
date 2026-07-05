@@ -1,6 +1,14 @@
 # 0002 — Redefine the page set and navigation
 
-**Status:** Accepted (2026-06-02); amended (2026-07-02)
+**Status:** Accepted (2026-06-02); amended (2026-07-02, 2026-07-05)
+
+## Amendment (2026-07-05) — Media replaced by About
+
+The client asked to replace the top-level Media page with an About page at
+`/about/`, using trustee information supplied in `Trustees Information - draft
+2026 (V3).pdf`. The old `/media/` route redirects to `/about/`; the old media
+gallery and consultation-document content is no longer part of the public site
+IA.
 
 ## Amendment (2026-07-02) — Pricing moved to Book the grounds
 
@@ -23,7 +31,7 @@ The authoritative **page set / navigation** is:
 - **Who Are We**
 - **Get Involved**
 - **Events**
-- **Media**
+- **About**
 - **Get in Touch**
 
 Pricing and Terms of Use are no longer top-level pages:

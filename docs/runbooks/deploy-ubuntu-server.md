@@ -153,7 +153,7 @@ cd /home/lsc
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm --entrypoint sh wpcli /var/www/html/_build/build.sh
 ```
 
-**Expected result:** Script prints `[build] ✅ Done` and creates pages (Home, Who Are We, Get Involved, Events, Media, Get in Touch, Terms of Use), menus, and media imports.
+**Expected result:** Script prints `[build] ✅ Done` and creates pages (Home, Who Are We, Get Involved, Events, About, Get in Touch, Terms of Use), menus, and media imports.
 **If it fails because LSC pages already exist:** Use `import-db.sh` instead, or set `LSC_ALLOW_SEED_REBUILD=1` only when deliberately overwriting page content from seed templates. For other failures, check that `wordpress/wp-content/themes/lsc-child/` exists in the clone.
 
 Skip this step if you are promoting an existing database (Flow B — see Appendix A).
@@ -213,7 +213,7 @@ WordPress PHP `mail()` is unreliable on most VPS hosts. When LSC provides SMTP c
 ### Verification
 
 - [ ] `https://www.lsportsc.org` loads over HTTPS with no mixed-content warnings
-- [ ] Primary nav shows: Home, Who Are We, Get Involved, Events, Media, Get in Touch
+- [ ] Primary nav shows: Home, Who Are We, Get Involved, Events, About, Get in Touch
 - [ ] Footer link to Terms of Use works
 - [ ] `https://www.lsportsc.org/wp-admin` login succeeds with production admin credentials
 - [ ] Pretty permalinks work (visit a sub-page directly, not only via nav)

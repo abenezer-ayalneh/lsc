@@ -6,7 +6,7 @@
 **Scope:** A like-for-like redesign — the **current content** rebuilt as a modern, responsive WordPress site. **No new features.**
 **Build approach:** Premium/free theme customisation (child theme); branding & content mostly ready; single developer working with Claude Code
 
-> **2026-06-02 design pivot:** The visual design is now a pixel-clone of [marys.org.uk](https://www.marys.org.uk/) (mirrored at `reference/reference-site/`). Mary's palette and typography supersede the original LSC red/gold brand, and the page set was redefined (Home / Who Are We / Get Involved / Events / Media / Get in Touch). This is a re-scope, not a tweak — the hour estimates in §5–6 predate it and should be re-confirmed with the client. See `CONTEXT.md`, `docs/adr/0001` and `docs/adr/0002`.
+> **2026-06-02 design pivot:** The visual design is now a pixel-clone of [marys.org.uk](https://www.marys.org.uk/) (mirrored at `reference/reference-site/`). Mary's palette and typography supersede the original LSC red/gold brand, and the page set was redefined (Home / Who Are We / Get Involved / Events / About / Get in Touch). This is a re-scope, not a tweak — the hour estimates in §5–6 predate it and should be re-confirmed with the client. See `CONTEXT.md`, `docs/adr/0001` and `docs/adr/0002`.
 
 ---
 
@@ -67,7 +67,7 @@ Home
 ├── Who Are We       (story, mission, the charity, facilities)
 ├── Get Involved     (youth programme + hire teaser linking to Book the grounds + volunteer application)
 ├── Events           (programmes, sports, summer scheme)
-├── Media            (project docs, consultation, flyers)
+├── About            (background, vision, mission, trustees)
 └── Get in Touch     (address, phone, email, social links, map)
 
 Linked pages: Book the grounds (pitch costs, pitch-use rules, Booking Hire Agreement); Become a Volunteer (Volunteer Application)
@@ -102,7 +102,7 @@ Estimates assume one competent developer working with Claude Code, the chosen-th
 ### Milestone 2 — Page Build & Content Migration
 | Task | Hours |
 |---|---|
-| Build pages: Who Are We, Get Involved, Events, Media, Get in Touch (+ footer Terms of Use) | 10 |
+| Build pages: Who Are We, Get Involved, Events, About, Get in Touch (+ footer Terms of Use) | 10 |
 | Migrate & format existing copy; convert PDF pricing into the on-page table on Book the grounds | 5 |
 | Image sourcing/optimisation from existing assets | 3 |
 | Menus, navigation & internal linking | 2 |

@@ -418,6 +418,178 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	}
 }
 
+/* -------- About: trustee director cards -------- */
+.lsc-page-about .entry.content-bg.single-entry {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.lsc-about-page {
+	box-sizing: border-box;
+	font-size: 1.05rem;
+	line-height: 1.75;
+	padding-left: var(--lsc-gutter);
+	padding-right: var(--lsc-gutter);
+	width: 100%;
+}
+
+.lsc-about-page > .wp-block-heading,
+.lsc-about-page h3.wp-block-heading {
+	color: var(--brand-navy);
+	overflow-wrap: anywhere;
+}
+
+.lsc-about-page > p {
+	max-width: 920px;
+}
+
+.lsc-trustee-grid {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	margin-top: 2rem;
+}
+
+.lsc-trustee-card {
+	background: #fff;
+	border: 1px solid rgba(1,74,127,.16);
+	border-radius: 8px;
+	box-shadow: 0 10px 28px rgba(0,0,0,.08);
+	overflow: hidden;
+}
+
+.lsc-trustee-summary {
+	align-items: stretch;
+	cursor: pointer;
+	display: grid;
+	grid-template-columns: minmax(180px, 42%) minmax(0, 1fr);
+	list-style: none;
+	min-height: 320px;
+	position: relative;
+}
+
+.lsc-trustee-summary::-webkit-details-marker {
+	display: none;
+}
+
+.lsc-trustee-photo {
+	background: var(--smoke);
+	display: block;
+	min-height: 320px;
+	overflow: hidden;
+}
+
+.lsc-trustee-photo img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	width: 100%;
+}
+
+.lsc-trustee-heading {
+	align-self: end;
+	display: block;
+	padding: 1.5rem 3.5rem 1.5rem 1.5rem;
+}
+
+.lsc-trustee-name {
+	color: var(--brand-navy);
+	display: block;
+	font-family: 'League Spartan', system-ui, sans-serif;
+	font-size: clamp(1.65rem, 2vw, 2.15rem);
+	font-weight: 800;
+	line-height: 1.05;
+	text-transform: uppercase;
+}
+
+.lsc-trustee-role {
+	color: var(--brand-orange);
+	display: block;
+	font-size: 1.05rem;
+	line-height: 1.2;
+	margin-top: .45rem;
+	text-transform: none;
+}
+
+.lsc-trustee-summary::after {
+	align-items: center;
+	background: var(--brand-orange);
+	border-radius: 50%;
+	color: #fff;
+	content: "+";
+	display: inline-flex;
+	font-family: 'League Spartan', system-ui, sans-serif;
+	font-size: 1.7rem;
+	font-weight: 800;
+	height: 38px;
+	justify-content: center;
+	line-height: 1;
+	position: absolute;
+	right: 1.25rem;
+	top: 1.25rem;
+	width: 38px;
+}
+
+.lsc-trustee-card[open] .lsc-trustee-summary::after {
+	content: "×";
+}
+
+.lsc-trustee-bio {
+	border-top: 1px solid rgba(1,74,127,.12);
+	padding: 1.35rem 1.5rem 1.5rem;
+}
+
+.lsc-trustee-bio p {
+	margin-top: 0;
+}
+
+.lsc-trustee-bio p:last-child {
+	margin-bottom: 0;
+}
+
+@media (max-width: 980px) {
+	.lsc-trustee-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 640px) {
+	.lsc-about-page {
+		font-size: 1rem;
+		line-height: 1.65;
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+
+	.lsc-about-page h2.wp-block-heading {
+		font-size: 1.65rem;
+		line-height: 1.15;
+	}
+
+	.lsc-trustee-summary {
+		grid-template-columns: 1fr;
+		min-height: 0;
+	}
+
+	.lsc-trustee-photo {
+		aspect-ratio: 4 / 3;
+		min-height: 0;
+	}
+
+	.lsc-trustee-heading {
+		padding: 1.2rem 3.25rem 1.2rem 1.2rem;
+	}
+
+	.lsc-trustee-name {
+		font-size: 1.55rem;
+	}
+
+	.lsc-trustee-bio {
+		padding: 1.1rem 1.2rem 1.25rem;
+	}
+}
+
 /* -------- Get Involved content cards -------- */
 .lsc-page-get-involved .entry.content-bg.single-entry {
 	margin-left: 0;
