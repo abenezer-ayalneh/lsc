@@ -337,6 +337,101 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	}
 }
 
+/* -------- Get Involved content cards -------- */
+.lsc-page-get-involved .entry.content-bg.single-entry {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.lsc-involved-page {
+	box-sizing: border-box;
+	font-size: 1.05rem;
+	line-height: 1.75;
+	overflow-x: clip;
+	padding-left: var(--lsc-gutter);
+	padding-right: var(--lsc-gutter);
+	width: 100%;
+}
+
+.lsc-involved-page .wp-block-heading {
+	color: var(--brand-navy);
+	overflow-wrap: anywhere;
+}
+
+.lsc-involved-intro {
+	max-width: 900px;
+}
+
+.lsc-involved-stage-image {
+	margin: 2rem auto;
+	max-width: 860px;
+}
+
+.lsc-involved-stage-image img {
+	border-radius: 8px;
+	box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+
+.lsc-involved-grid {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin-top: 2rem;
+}
+
+.lsc-involved-card {
+	background: #fff;
+	border: 1px solid rgba(1,74,127,.14);
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba(0,0,0,.07);
+	padding: 1.5rem;
+}
+
+.lsc-involved-card h3 {
+	color: var(--brand-navy);
+	font-size: 1.25rem;
+	margin-top: 0;
+}
+
+.lsc-involved-card p {
+	margin-bottom: 0;
+}
+
+@media (max-width: 980px) {
+	.lsc-involved-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.lsc-involved-page {
+		font-size: 1rem;
+		line-height: 1.65;
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+
+	.lsc-involved-page h1.wp-block-heading {
+		font-size: 1.85rem;
+		line-height: 1.12;
+	}
+
+	.lsc-involved-page h2.wp-block-heading {
+		font-size: 1.55rem;
+		line-height: 1.18;
+	}
+
+	.lsc-involved-page h3.wp-block-heading,
+	.lsc-involved-card h3 {
+		font-size: 1.15rem;
+		line-height: 1.25;
+	}
+
+	.lsc-involved-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
 /* -------- Get in Touch: contact card + map card -------- */
 .lsc-contact-card {
 	border-radius: 18px;

@@ -86,6 +86,14 @@ add_action( 'wp_head', function () {
 	echo '<link rel="apple-touch-icon" sizes="180x180" href="' . esc_url( $dir . '/apple-touch-icon.png' ) . '">' . "\n";
 } );
 
+add_filter( 'body_class', function ( $classes ) {
+	if ( is_page( 'get-involved' ) ) {
+		$classes[] = 'lsc-page-get-involved';
+	}
+
+	return $classes;
+} );
+
 /**
  * Book the grounds intentionally moved from a Get Involved child page to a
  * standalone URL. Do not let WordPress preserve the old nested path via its
