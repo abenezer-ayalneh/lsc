@@ -451,25 +451,28 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 }
 
 .lsc-trustee-card {
+	appearance: none;
 	background: #fff;
 	border: 1px solid rgba(1,74,127,.16);
 	border-radius: 8px;
 	box-shadow: 0 10px 28px rgba(0,0,0,.08);
-	overflow: hidden;
-}
-
-.lsc-trustee-summary {
-	align-items: stretch;
+	color: inherit;
 	cursor: pointer;
 	display: grid;
+	font: inherit;
 	grid-template-columns: minmax(180px, 42%) minmax(0, 1fr);
-	list-style: none;
 	min-height: 320px;
-	position: relative;
+	overflow: hidden;
+	padding: 0;
+	text-align: left;
+	width: 100%;
+	transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.lsc-trustee-summary::-webkit-details-marker {
-	display: none;
+.lsc-trustee-card:hover,
+.lsc-trustee-card:focus-visible {
+	box-shadow: 0 16px 34px rgba(0,0,0,.14);
+	transform: translateY(-3px);
 }
 
 .lsc-trustee-photo {
@@ -490,7 +493,7 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-trustee-heading {
 	align-self: end;
 	display: block;
-	padding: 1.5rem 3.5rem 1.5rem 1.5rem;
+	padding: 1.5rem;
 }
 
 .lsc-trustee-name {
@@ -512,40 +515,111 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	text-transform: none;
 }
 
-.lsc-trustee-summary::after {
-	align-items: center;
-	background: var(--brand-orange);
-	border-radius: 50%;
-	color: #fff;
-	content: "+";
-	display: inline-flex;
-	font-family: 'League Spartan', system-ui, sans-serif;
-	font-size: 1.7rem;
-	font-weight: 800;
-	height: 38px;
+.lsc-trustee-modal[hidden] {
+	display: none;
+}
+
+.lsc-trustee-modal {
+	align-items: flex-start;
+	display: flex;
+	inset: 0;
 	justify-content: center;
+	overflow-y: auto;
+	padding: clamp(1.25rem, 4vw, 3rem);
+	position: fixed;
+	z-index: 9999;
+}
+
+.lsc-trustee-modal__backdrop {
+	background: rgba(0,0,0,.72);
+	inset: 0;
+	position: fixed;
+}
+
+.lsc-trustee-modal__panel {
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 24px 70px rgba(0,0,0,.36);
+	box-sizing: border-box;
+	color: var(--ink);
+	margin: auto 0;
+	max-height: calc(100vh - clamp(2.5rem, 8vw, 6rem));
+	max-width: 1020px;
+	overflow-y: auto;
+	padding: clamp(1.5rem, 4vw, 3rem);
+	position: relative;
+	width: min(100%, 1020px);
+	z-index: 1;
+}
+
+.lsc-trustee-modal__close {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	color: #555;
+	cursor: pointer;
+	font-family: 'League Spartan', system-ui, sans-serif;
+	font-size: 2rem;
+	font-weight: 800;
 	line-height: 1;
+	padding: .25rem;
 	position: absolute;
 	right: 1.25rem;
-	top: 1.25rem;
-	width: 38px;
+	top: 1rem;
 }
 
-.lsc-trustee-card[open] .lsc-trustee-summary::after {
-	content: "×";
+.lsc-trustee-modal__close:hover,
+.lsc-trustee-modal__close:focus-visible {
+	color: var(--brand-orange);
 }
 
-.lsc-trustee-bio {
-	border-top: 1px solid rgba(1,74,127,.12);
-	padding: 1.35rem 1.5rem 1.5rem;
+.lsc-trustee-modal__header {
+	align-items: start;
+	display: grid;
+	gap: 2rem;
+	grid-template-columns: 220px minmax(0, 1fr);
+	margin-bottom: 2.25rem;
+	padding-right: 2.5rem;
 }
 
-.lsc-trustee-bio p {
+.lsc-trustee-modal__header img {
+	display: block;
+	height: 220px;
+	object-fit: cover;
+	object-position: center;
+	width: 220px;
+}
+
+.lsc-trustee-modal__header h3 {
+	color: #000;
+	font-size: clamp(2.2rem, 5vw, 4rem);
+	line-height: .96;
+	margin-top: 0;
+	text-transform: none;
+}
+
+.lsc-trustee-modal__header p {
+	color: #666;
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin: .8rem 0 0;
+}
+
+.lsc-trustee-modal__bio {
+	font-size: 1.08rem;
+	line-height: 1.55;
+}
+
+.lsc-trustee-modal__bio p {
 	margin-top: 0;
 }
 
-.lsc-trustee-bio p:last-child {
+.lsc-trustee-modal__bio p:last-child {
 	margin-bottom: 0;
+}
+
+body.lsc-trustee-modal-open {
+	overflow: hidden;
 }
 
 @media (max-width: 980px) {
@@ -567,7 +641,7 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 		line-height: 1.15;
 	}
 
-	.lsc-trustee-summary {
+	.lsc-trustee-card {
 		grid-template-columns: 1fr;
 		min-height: 0;
 	}
@@ -578,15 +652,46 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	}
 
 	.lsc-trustee-heading {
-		padding: 1.2rem 3.25rem 1.2rem 1.2rem;
+		padding: 1.2rem;
 	}
 
 	.lsc-trustee-name {
 		font-size: 1.55rem;
 	}
 
-	.lsc-trustee-bio {
-		padding: 1.1rem 1.2rem 1.25rem;
+	.lsc-trustee-modal {
+		padding: .85rem;
+	}
+
+	.lsc-trustee-modal__panel {
+		max-height: calc(100vh - 1.7rem);
+		padding: 1.25rem;
+	}
+
+	.lsc-trustee-modal__header {
+		gap: 1.1rem;
+		grid-template-columns: 96px minmax(0, 1fr);
+		margin-bottom: 1.5rem;
+		padding-right: 2rem;
+	}
+
+	.lsc-trustee-modal__header img {
+		height: 96px;
+		width: 96px;
+	}
+
+	.lsc-trustee-modal__header h3 {
+		font-size: 1.9rem;
+		line-height: 1;
+	}
+
+	.lsc-trustee-modal__header p {
+		font-size: 1rem;
+	}
+
+	.lsc-trustee-modal__bio {
+		font-size: 1rem;
+		line-height: 1.55;
 	}
 }
 

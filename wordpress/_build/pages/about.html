@@ -37,52 +37,100 @@
 
 <!-- wp:html -->
 <div class="lsc-trustee-grid">
-	<details class="lsc-trustee-card">
-		<summary class="lsc-trustee-summary">
-			<span class="lsc-trustee-photo"><img src="__HARRY_URL__" alt="Harry Powell" class="wp-image-__HARRY_ID__"></span>
-			<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Harry Powell <span class="lsc-trustee-role">( Chair )</span></span></span>
-		</summary>
-		<div class="lsc-trustee-bio">
+	<button class="lsc-trustee-card" type="button" data-lsc-trustee-open="harry-powell" aria-haspopup="dialog">
+		<span class="lsc-trustee-photo"><img src="__HARRY_URL__" alt="Harry Powell" class="wp-image-__HARRY_ID__"></span>
+		<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Harry Powell <span class="lsc-trustee-role">( Chair )</span></span></span>
+	</button>
+
+	<button class="lsc-trustee-card" type="button" data-lsc-trustee-open="ashley-letts" aria-haspopup="dialog">
+		<span class="lsc-trustee-photo"><img src="__ASHLEY_URL__" alt="Ashley Letts" class="wp-image-__ASHLEY_ID__"></span>
+		<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Ashley Letts <span class="lsc-trustee-role">- Vice Chair</span></span></span>
+	</button>
+
+	<button class="lsc-trustee-card" type="button" data-lsc-trustee-open="lascelles-dixon" aria-haspopup="dialog">
+		<span class="lsc-trustee-photo"><img src="__LASCELLES_URL__" alt="Lascelles Dixon" class="wp-image-__LASCELLES_ID__"></span>
+		<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Lascelles Dixon <span class="lsc-trustee-role">- Treasurer</span></span></span>
+	</button>
+
+	<button class="lsc-trustee-card" type="button" data-lsc-trustee-open="mike-garrick" aria-haspopup="dialog">
+		<span class="lsc-trustee-photo"><img src="__MIKE_URL__" alt="Mike Garrick" class="wp-image-__MIKE_ID__"></span>
+		<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Mike Garrick <span class="lsc-trustee-role">– Secretary</span></span></span>
+	</button>
+</div>
+
+<div class="lsc-trustee-modal" data-lsc-trustee-modal="harry-powell" role="dialog" aria-modal="true" aria-labelledby="lsc-trustee-harry-powell-title" hidden>
+	<div class="lsc-trustee-modal__backdrop" data-lsc-trustee-close></div>
+	<div class="lsc-trustee-modal__panel" role="document" tabindex="-1">
+		<button class="lsc-trustee-modal__close" type="button" data-lsc-trustee-close aria-label="Close Harry Powell profile">×</button>
+		<div class="lsc-trustee-modal__header">
+			<img src="__HARRY_URL__" alt="Harry Powell" class="wp-image-__HARRY_ID__">
+			<div>
+				<h3 id="lsc-trustee-harry-powell-title">Harry Powell</h3>
+				<p>( Chair )</p>
+			</div>
+		</div>
+		<div class="lsc-trustee-modal__bio">
 			<p>Harry is one of the founding members of Lewisham Sports Consortium. A retired Senior Youth Worker in Lewisham, former professional footballer and keen cricketer, he has a strong and wide-ranging interest in sport, education and community development. Harry has chaired the organisation for more than 28 years, bringing extensive knowledge and experience in leadership, management and governance. He plays a key role in setting the organisation’s strategic goals and vision.</p>
 			<p>He is also an experienced sports coach and football referee. Harry has deep knowledge of the local area and significant experience working with people in the community. He ran an independent youth and community centre in Lewisham for many years has a strong network of contacts across local youth and community organisations in the borough of Lewisham and South London.</p>
 		</div>
-	</details>
+	</div>
+</div>
 
-	<details class="lsc-trustee-card">
-		<summary class="lsc-trustee-summary">
-			<span class="lsc-trustee-photo"><img src="__ASHLEY_URL__" alt="Ashley Letts" class="wp-image-__ASHLEY_ID__"></span>
-			<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Ashley Letts <span class="lsc-trustee-role">- Vice Chair</span></span></span>
-		</summary>
-		<div class="lsc-trustee-bio">
+<div class="lsc-trustee-modal" data-lsc-trustee-modal="ashley-letts" role="dialog" aria-modal="true" aria-labelledby="lsc-trustee-ashley-letts-title" hidden>
+	<div class="lsc-trustee-modal__backdrop" data-lsc-trustee-close></div>
+	<div class="lsc-trustee-modal__panel" role="document" tabindex="-1">
+		<button class="lsc-trustee-modal__close" type="button" data-lsc-trustee-close aria-label="Close Ashley Letts profile">×</button>
+		<div class="lsc-trustee-modal__header">
+			<img src="__ASHLEY_URL__" alt="Ashley Letts" class="wp-image-__ASHLEY_ID__">
+			<div>
+				<h3 id="lsc-trustee-ashley-letts-title">Ashley Letts</h3>
+				<p>- Vice Chair</p>
+			</div>
+		</div>
+		<div class="lsc-trustee-modal__bio">
 			<p>Ashley is one of the founding members of Lewisham Sports Consortium. He is a retired master carpenter and builder, with decades of experience managing football teams and coaching. He is also a qualified football referee.</p>
 			<p>Ashley brings valuable expertise in facilities and building development and has made significant contributions to the site’s physical infrastructure. He has played a key role in setting up and maintaining the site’s operational functions and helping ensure it can deliver its services and programmes effectively.</p>
 		</div>
-	</details>
+	</div>
+</div>
 
-	<details class="lsc-trustee-card">
-		<summary class="lsc-trustee-summary">
-			<span class="lsc-trustee-photo"><img src="__LASCELLES_URL__" alt="Lascelles Dixon" class="wp-image-__LASCELLES_ID__"></span>
-			<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Lascelles Dixon <span class="lsc-trustee-role">- Treasurer</span></span></span>
-		</summary>
-		<div class="lsc-trustee-bio">
+<div class="lsc-trustee-modal" data-lsc-trustee-modal="lascelles-dixon" role="dialog" aria-modal="true" aria-labelledby="lsc-trustee-lascelles-dixon-title" hidden>
+	<div class="lsc-trustee-modal__backdrop" data-lsc-trustee-close></div>
+	<div class="lsc-trustee-modal__panel" role="document" tabindex="-1">
+		<button class="lsc-trustee-modal__close" type="button" data-lsc-trustee-close aria-label="Close Lascelles Dixon profile">×</button>
+		<div class="lsc-trustee-modal__header">
+			<img src="__LASCELLES_URL__" alt="Lascelles Dixon" class="wp-image-__LASCELLES_ID__">
+			<div>
+				<h3 id="lsc-trustee-lascelles-dixon-title">Lascelles Dixon</h3>
+				<p>- Treasurer</p>
+			</div>
+		</div>
+		<div class="lsc-trustee-modal__bio">
 			<p>Retired secondary school teacher having taught for 30 years and been Head of Mathematics at three different inner London secondary schools (girls, boys, and mixed schools). Other roles within formal education involved using experience/skills to mentor and support mathematics teachers, Heads of Mathematics and Mathematics Department Teams to strengthen and develop skills, knowledge and professional practice as an AST (Advanced Skills Teacher). He is ‘a people person’, has a degree and a PGCE, experience of middle and senior management within school settings. A variety of community work/voluntary experiences, including work with ACER (African Caribbean Education Resource), with Saturday Schools, with the National Mentoring Consortium to encourage and mentor Black students going into teaching as a career, work with developing work with Black parents around schooling and education.</p>
 			<p>A member of the Lewisham Sports Consortium (having been a player for one of the Founding football clubs) since it started, is a trustee of the organisation and the Treasurer.</p>
 			<p>Lascelles enjoy books, music – he says he is “trying to learn an instrument”.</p>
 			<p>He is a sports lover who has run/coached football teams for adults and children. He says “education has been a major part and passion in my life; in addition to family, community and sport. Volunteering and working with LSC has helped development my own personal skills and knowledge – I know a little about accounting now! This, in addition to allowing the use my skills and experiences to continue with work within the community, in particular to sustain and develop our range of activities and facilities that serve all ages of the community.”</p>
 		</div>
-	</details>
+	</div>
+</div>
 
-	<details class="lsc-trustee-card">
-		<summary class="lsc-trustee-summary">
-			<span class="lsc-trustee-photo"><img src="__MIKE_URL__" alt="Mike Garrick" class="wp-image-__MIKE_ID__"></span>
-			<span class="lsc-trustee-heading"><span class="lsc-trustee-name">Mike Garrick <span class="lsc-trustee-role">– Secretary</span></span></span>
-		</summary>
-		<div class="lsc-trustee-bio">
+<div class="lsc-trustee-modal" data-lsc-trustee-modal="mike-garrick" role="dialog" aria-modal="true" aria-labelledby="lsc-trustee-mike-garrick-title" hidden>
+	<div class="lsc-trustee-modal__backdrop" data-lsc-trustee-close></div>
+	<div class="lsc-trustee-modal__panel" role="document" tabindex="-1">
+		<button class="lsc-trustee-modal__close" type="button" data-lsc-trustee-close aria-label="Close Mike Garrick profile">×</button>
+		<div class="lsc-trustee-modal__header">
+			<img src="__MIKE_URL__" alt="Mike Garrick" class="wp-image-__MIKE_ID__">
+			<div>
+				<h3 id="lsc-trustee-mike-garrick-title">Mike Garrick</h3>
+				<p>– Secretary</p>
+			</div>
+		</div>
+		<div class="lsc-trustee-modal__bio">
 			<p>Retired Local Government Officer with more than 40 years of experience in management and administration, including finance, school and institutional governance, and personnel. Holds a degree and diploma in social sciences, a certificate in accounting, and several qualifications in sports coaching and is qualified football referee.</p>
 			<p>Mike is one of the founding members of the Lewisham Sports Consortium and has been a trustee of the organisation for more than 25 years , he was previously the Treasure but now currently holds the position of Secretary.</p>
 			<p>Mike says “ serving as a volunteer and trustee has given me the opportunity to use my skills, experience, and abilities to support the social, cultural, and educational growth of individuals, families, and the broader community. These actions focus on enhancing wellbeing, fostering community cohesion, and advancing equality and inclusion. Though at times challenging and frustrating, this work has been rewarding for both me and the charity’s beneficiaries, improving enrichment and quality of life across all age groups”.</p>
 		</div>
-	</details>
+	</div>
 </div>
 <!-- /wp:html -->
 </div>

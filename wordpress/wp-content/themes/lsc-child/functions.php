@@ -36,6 +36,17 @@ add_action( 'wp_enqueue_scripts', function () {
 			true
 		);
 	}
+
+	$trustees_script = get_stylesheet_directory() . '/assets/js/lsc-trustees.js';
+	if ( file_exists( $trustees_script ) ) {
+		wp_enqueue_script(
+			'lsc-trustees',
+			get_stylesheet_directory_uri() . '/assets/js/lsc-trustees.js',
+			array(),
+			filemtime( $trustees_script ),
+			true
+		);
+	}
 } );
 
 /**
