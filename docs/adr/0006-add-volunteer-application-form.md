@@ -1,6 +1,12 @@
 # 0006 - Add a Volunteer Application form
 
-**Status:** Accepted (2026-07-05)
+**Status:** Accepted (2026-07-05); amended (2026-07-07)
+
+## Amendment (2026-07-07) - Primary nav label
+
+The Volunteer Application page is now included in the primary navigation as
+**Volunteer**, positioned after **Get Involved**. The page title and route remain
+**Become a Volunteer** at `/become-a-volunteer/`.
 
 ## Context
 
@@ -16,8 +22,9 @@ status, optional references, and declarations.
 ## Decision
 
 Add a standalone **Volunteer Application** page at `/become-a-volunteer/`, linked
-from the bottom of Get Involved but not added to the primary navigation. The page
-uses Forminator, matching the Booking Hire Agreement implementation pattern:
+from Get Involved and included in the primary navigation as **Volunteer**. The
+page uses Forminator, matching the Booking Hire Agreement implementation
+pattern:
 
 - Admin notifications go to `lewishamsportsconsortium@gmail.com`.
 - Submissions are stored in WordPress/Forminator admin.

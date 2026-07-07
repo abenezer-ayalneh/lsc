@@ -157,7 +157,7 @@ build_menu() {
 }
 
 echo "[build] Building menus..."
-build_menu "Primary" primary home who-are-we get-involved events about get-in-touch
+build_menu "Primary" primary home who-are-we get-involved become-a-volunteer events about get-in-touch
 build_menu "Footer"  footer  get-in-touch terms
 
 echo "[build] Seeding editable footer widget if needed..."

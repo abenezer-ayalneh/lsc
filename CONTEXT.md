@@ -14,7 +14,7 @@ Glossary of the language we use on this project. Terms only — no implementatio
 
 **LSC brand marks** — The LSC logo and motto image. These survive the reskin as identity marks even though the surrounding colour system becomes Mary's.
 
-**Page set** — The authoritative site navigation: **Home, Who Are We, Get Involved, Events, About, Get in Touch**. This replaces the earlier documented set (About/Facilities/Pricing/Terms/Contact), and later replaced Media with About. See `docs/adr/0002`.
+**Page set** — The authoritative site navigation: **Home, Who Are We, Get Involved, Volunteer, Events, About, Get in Touch**. This replaces the earlier documented set (About/Facilities/Pricing/Terms/Contact), later replaced Media with About, and later promoted Volunteer into the primary nav. See `docs/adr/0002`.
 
 **Pricing table** — The on-page hire-rates table derived from `LSC_Info_Prices.pdf`. No longer a top-level page; it lives on the standalone **Book the grounds** page.
 

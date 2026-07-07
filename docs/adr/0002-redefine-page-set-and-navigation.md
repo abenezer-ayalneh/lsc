@@ -1,6 +1,13 @@
 # 0002 — Redefine the page set and navigation
 
-**Status:** Accepted (2026-06-02); amended (2026-07-02, 2026-07-05)
+**Status:** Accepted (2026-06-02); amended (2026-07-02, 2026-07-05, 2026-07-07)
+
+## Amendment (2026-07-07) - Volunteer promoted to primary nav
+
+The client asked to add the existing `/become-a-volunteer/` page to the
+top-level navigation with the label **Volunteer**. It sits after **Get
+Involved**, keeping the volunteering action close to the related participation
+page while making the form directly accessible.
 
 ## Amendment (2026-07-05) — Media replaced by About
 
@@ -30,6 +37,7 @@ The authoritative **page set / navigation** is:
 - **Home**
 - **Who Are We**
 - **Get Involved**
+- **Volunteer**
 - **Events**
 - **About**
 - **Get in Touch**
