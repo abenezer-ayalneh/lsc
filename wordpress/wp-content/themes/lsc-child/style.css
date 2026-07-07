@@ -126,6 +126,76 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 	}
 }
 
+/* Homepage text scales by breakpoint so headings, body copy, cards, lists and
+   CTA labels stay readable without overflowing on narrow screens. */
+.home .entry-content {
+	--lsc-home-text: 1.05rem;
+	--lsc-home-small: .95rem;
+	--lsc-home-medium: 1.125rem;
+	--lsc-home-large: 1.6rem;
+	--lsc-home-x-large: 2.4rem;
+	--lsc-home-huge: 3.4rem;
+	--lsc-home-button: 1rem;
+	font-size: var(--lsc-home-text);
+	line-height: 1.65;
+}
+
+.home .entry-content p,
+.home .entry-content li {
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.home .entry-content .has-small-font-size { font-size: var(--lsc-home-small) !important; }
+.home .entry-content .has-medium-font-size { font-size: var(--lsc-home-medium) !important; }
+.home .entry-content .has-large-font-size { font-size: var(--lsc-home-large) !important; }
+.home .entry-content .has-x-large-font-size { font-size: var(--lsc-home-x-large) !important; }
+.home .entry-content .has-huge-font-size { font-size: var(--lsc-home-huge) !important; }
+
+.home .entry-content .wp-block-heading {
+	line-height: 1.08;
+	overflow-wrap: anywhere;
+}
+
+.home .entry-content h3.wp-block-heading {
+	line-height: 1.12;
+}
+
+.home .entry-content .wp-block-button__link {
+	font-size: var(--lsc-home-button) !important;
+	line-height: 1;
+	white-space: normal;
+}
+
+@media (max-width: 1180px) {
+	.home .entry-content {
+		--lsc-home-large: 1.45rem;
+		--lsc-home-x-large: 2.15rem;
+		--lsc-home-huge: 3rem;
+	}
+}
+
+@media (max-width: 767px) {
+	.home .entry-content {
+		--lsc-home-text: 1rem;
+		--lsc-home-medium: 1.04rem;
+		--lsc-home-large: 1.18rem;
+		--lsc-home-x-large: 1.75rem;
+		--lsc-home-huge: 2.55rem;
+		--lsc-home-button: .95rem;
+		line-height: 1.58;
+	}
+}
+
+@media (max-width: 380px) {
+	.home .entry-content {
+		--lsc-home-large: 1.1rem;
+		--lsc-home-x-large: 1.55rem;
+		--lsc-home-huge: 2.05rem;
+		--lsc-home-button: .9rem;
+	}
+}
+
 /* Hero overlay legibility */
 .lsc-hero { position: relative; }
 .lsc-hero h1, .lsc-hero p { text-shadow: 0 1px 10px rgba(0,0,0,.55); }
@@ -157,12 +227,12 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 		margin-bottom: .65rem;
 	}
 	.home .lsc-hero h1 {
-		font-size: clamp(2rem, 9.2vw, 2.7rem) !important;
+		font-size: var(--lsc-home-huge) !important;
 		line-height: 1;
 		margin-bottom: .85rem;
 	}
 	.home .lsc-hero h1 + p {
-		font-size: 1.12rem !important;
+		font-size: var(--lsc-home-medium) !important;
 		line-height: 1.38;
 		margin-bottom: 1.35rem;
 	}
@@ -224,6 +294,103 @@ h1, h2 { text-transform: uppercase; letter-spacing: .2px; font-weight: 800; }
 .lsc-strand-list li::before {
 	content: "›"; position: absolute; left: 0; font-weight: 800;
 	font-family: 'League Spartan', sans-serif;
+}
+
+@media (max-width: 767px) {
+	.home .entry-content > .wp-block-group.has-background {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide {
+		box-sizing: border-box;
+		gap: 1.6rem;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 34rem;
+		padding-left: var(--lsc-gutter);
+		padding-right: var(--lsc-gutter);
+		padding-top: 2.6rem;
+		padding-bottom: 2.8rem;
+		width: 100% !important;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide > .wp-block-column {
+		box-sizing: border-box;
+		flex-basis: 100% !important;
+		width: 100%;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide h2.wp-block-heading {
+		font-size: 1.45rem !important;
+		line-height: 1.08;
+		margin-bottom: .9rem;
+		max-width: 17rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide p.has-medium-font-size {
+		font-size: 1rem !important;
+		line-height: 1.5;
+		margin-top: 0;
+		max-width: 31rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide p[style*="text-transform:uppercase"] {
+		font-size: .9rem;
+		letter-spacing: .8px !important;
+		line-height: 1.2;
+		margin-top: 2rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-list {
+		display: grid;
+		gap: .65rem;
+		margin-top: 1rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-list li {
+		font-size: .98rem;
+		line-height: 1.42;
+		padding: 0 0 0 1.1rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-list li::before {
+		left: 0;
+		top: -.02em;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-photo {
+		aspect-ratio: 4 / 3;
+		border-radius: 14px !important;
+		margin-top: .35rem;
+		min-height: 240px !important;
+		width: 100%;
+	}
+}
+
+@media (max-width: 380px) {
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide {
+		gap: 1.35rem;
+		padding-top: 2.25rem;
+		padding-bottom: 2.45rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide h2.wp-block-heading {
+		font-size: 1.32rem !important;
+		max-width: 15.5rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide p.has-medium-font-size {
+		font-size: .96rem !important;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-list li {
+		font-size: .94rem;
+	}
+
+	.home .entry-content > .wp-block-group.has-background > .wp-block-columns.alignwide .lsc-strand-photo {
+		min-height: 214px !important;
+	}
 }
 
 /* -------- Page image banners and tabs -------- */
